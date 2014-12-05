@@ -1,0 +1,24 @@
+{
+  "name": "gogoapi",
+  "version": "0.0.1",
+  "description": "API for GO and other Biological DBs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bioinformatics",
+    "go",
+    "api"
+  ],
+  "dependencies": {
+    "express": "3.x",
+    "mysql": "2.x",
+    "request": "2.x",
+    "async": "0.2.x",
+    "xml2js": "0.4.x",
+    "nconf": "0.6.x"
+  },
+  "author": "Toni Hermoso",
+  "license": "GPLv3"
+}
