@@ -320,7 +320,7 @@ function getGO( connection, item, listGO, listdesc, res, callback ) {
 
 							async.each( results, function( result, callback2 ){
 								
-								golist.push( { acc: result.GO, type: result.term_type } );
+								golist.push( { acc: result.GO, term_type: result.term_type, name: result.name } );
 								callback2();
 							},
 							function( err ) {
