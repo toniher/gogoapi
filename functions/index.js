@@ -54,13 +54,17 @@ exports.addProp = function( data, param, value, callback ) {
 	callback( data );
 }
 
-exports.sendError = function( connection, res ) {
+exports.sendError = function( connection, res, err ) {
 
 	//connection.end();
 	var outcome = {};
+	
+	// Allowing other error msgss
+	err = typeof a !== 'undefined' ? err : "Error!";
+	
 	outcome.status = "Error"
-	outcome.text = "Error!";
-	functions.returnJSON( res, outcome);
+	outcome.text =  err;
+	functions.returnJSON( res, outcome );
 };
 
 exports.capitaliseFirstLetter = function( string ) {
