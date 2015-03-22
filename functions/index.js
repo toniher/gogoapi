@@ -60,7 +60,7 @@ exports.sendError = function( connection, res, err ) {
 	var outcome = {};
 	
 	// Allowing other error msgss
-	err = typeof a !== 'undefined' ? err : "Error!";
+	err = typeof err !== 'undefined' ? err : "Error!";
 	
 	outcome.status = "Error"
 	outcome.text =  err;
