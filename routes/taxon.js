@@ -23,7 +23,12 @@ exports.getId = function( req, res ) {
 			});
 		}, function( err) {
 			if ( err ) {
-				// error
+			
+				var outcome = {};
+				outcome.status = "Error"
+				outcome.text =  err;
+				functions.returnJSON( res, outcome );
+			
 			}
 			// Return array
 			functions.returnJSON( res, outcome );
@@ -62,7 +67,8 @@ exports.getCommon = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
 			functions.returnJSON( res, outcome );
 
 		}
@@ -105,7 +111,8 @@ exports.getCommonList = function( req, res ){
 			
 						connection.end();
 						var outcome = {};
-						outcome.msg = "Error!";
+						outcome.status = "Error"
+						outcome.text =  error;
 						functions.returnJSON( res, outcome);
 			
 					}
@@ -141,7 +148,7 @@ exports.getList = function(req, res) {
 		connection.query(sql, function(err, results) {
 	
 			if ( err ) {
-				functions.sendError( connection, res );
+				functions.sendError( connection, res, err );
 			} else {
 	
 				var golist = new Array();
@@ -151,7 +158,7 @@ exports.getList = function(req, res) {
 					connection.query(sql2, function(err, results) {
 	
 						if ( err ) {
-							functions.sendError( connection, res );
+							functions.sendError( connection, res, err );
 						} else {
 			
 							var golist = new Array();
@@ -167,7 +174,7 @@ exports.getList = function(req, res) {
 									getInfo( config.neo4j.server, golist[0], function( data ) {
 										// We put original accession and let's have fun
 										functions.addProp( data, "acc", acc, function( output ) {
-											functions.returnJSON( res, output);
+											functions.returnJSON( res, output );
 										});
 									});
 								});
@@ -228,7 +235,8 @@ exports.getRankAll = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
 			
 			functions.returnJSON( res, outcome );
 
@@ -260,7 +268,8 @@ exports.getRank = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
 			
 			functions.returnJSON( res, outcome );
 
@@ -296,7 +305,9 @@ function getInfo( server, taxid, callback ) {
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
+			
 			callback( outcome );
 
 		}
@@ -315,7 +326,7 @@ function getTaxID( connection, item, listid, res, callback ) {
 	connection.query(sql, function(err, results) {
 
 		if ( err ) {
-			functions.sendError( connection, res );
+			functions.sendError( connection, res, err );
 		} else {
 
 			var golist = new Array();
@@ -325,7 +336,7 @@ function getTaxID( connection, item, listid, res, callback ) {
 				connection.query(sql2, function(err, results) {
 
 					if ( err ) {
-						functions.sendError( connection, res );
+						functions.sendError( connection, res, err );
 					} else {
 		
 						var golist = new Array();
@@ -409,7 +420,8 @@ function getSpecies( server, name, callback ) {
 
 					} else {
 						var outcome = {};
-						outcome.msg = "Error!";
+						outcome.status = "Error"
+						outcome.text =  error;
 						callback( outcome );
 					}
 
@@ -428,7 +440,9 @@ function getSpecies( server, name, callback ) {
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
+			
 			callback( outcome );
 
 		}

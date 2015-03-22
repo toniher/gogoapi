@@ -27,7 +27,8 @@ exports.getId = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
 			functions.returnJSON( res, outcome );
 
 		}
@@ -52,7 +53,8 @@ exports.getCommon = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.msg = "Error!";
+			outcome.status = "Error"
+			outcome.text =  error;
 			functions.returnJSON( res, outcome );
 
 		}
@@ -88,7 +90,7 @@ exports.getCommonList = function( req, res ){
 		}, function( err ) {
 			
 			if ( err ) {
-				functions.sendError( connection, res );
+				functions.sendError( connection, res, err );
 			}
 	
 			var numEntries = listarray.length;
@@ -167,7 +169,7 @@ exports.getCommonList = function( req, res ){
 				}, function( err ) {
 					
 					if ( err ) {
-						functions.sendError( connection, res );
+						functions.sendError( connection, res, err );
 					}
 					
 					for ( var h=0; h < highlighted.length; h++ ) {
@@ -187,7 +189,7 @@ exports.getCommonList = function( req, res ){
 			}, function ( err ) {
 				
 				if ( err ) {
-					functions.sendError( connection, res );
+					functions.sendError( connection, res, err );
 				}
 				
 				// Let's add name to ListGO
@@ -241,7 +243,7 @@ exports.getList = function(req, res) {
 		connection.query(sql, function(err, results) {
 	
 			if ( err ) {
-				functions.sendError( connection, res );
+				functions.sendError( connection, res, err );
 			} else {
 	
 				var golist = new Array();
@@ -251,7 +253,7 @@ exports.getList = function(req, res) {
 					connection.query(sql2, function(err, results) {
 	
 						if ( err ) {
-							functions.sendError( connection, res );
+							functions.sendError( connection, res, err );
 						} else {
 			
 							var golist = new Array();
@@ -264,7 +266,7 @@ exports.getList = function(req, res) {
 								},
 								function( err ) {
 									// connection.end();
-									functions.returnJSON( res, {"acc":acc, "list":golist});
+									functions.returnJSON( res, {"acc":acc, "list":golist} );
 								});
 			
 							} else {
@@ -301,7 +303,7 @@ function getGO( connection, item, listGO, listdesc, res, callback ) {
 	connection.query(sql, function(err, results) {
 
 		if ( err ) {
-			functions.sendError( connection, res );
+			functions.sendError( connection, res, err );
 		} else {
 
 			var golist = new Array();
@@ -311,7 +313,7 @@ function getGO( connection, item, listGO, listdesc, res, callback ) {
 				connection.query(sql2, function(err, results) {
 
 					if ( err ) {
-						functions.sendError( connection, res );
+						functions.sendError( connection, res, err );
 					} else {
 		
 						var golist = new Array();
@@ -342,7 +344,7 @@ function getGO( connection, item, listGO, listdesc, res, callback ) {
 		
 						} else {
 							// Temporary sendError
-							functions.sendError( connection, res );
+							functions.sendError( connection, res, err );
 						}
 					}
 	
