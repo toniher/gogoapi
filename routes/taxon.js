@@ -1,4 +1,5 @@
 var functions = require('../functions/index.js');
+var neo4j = require('../functions/neo4j.js');
 var request = require('request');
 var async = require("async");
 var mysql = require('../mysql.js');
@@ -284,32 +285,33 @@ exports.getTaxInfo = function( server, taxid, callback ) {
 };
 
 function getInfo( server, taxid, callback ) {
-
-	var query = server+"/db/data/index/node/TAXID/id/"+taxid;
 	
-	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			
-			var arrayResult = JSON.parse( body );
+	var queryObj = {
+		"id": parseInt( taxid, 10 ),
+	};
+		
+	neo4j.getInfobyField( server, "TAXID", queryObj, function ( error, data ) {
+				
+		if (!error ) {
 
-			var outcome = {};
+			var outcome;
 			
-			if ( arrayResult.length > 0 ) {
-				if ( arrayResult[0].data ) {
-					outcome = arrayResult[0].data;
-				}
+			if ( data.length > 0 ) {
+				outcome = data[0];
+			} else {
+				outcome = data;
 			}
 			
-			callback( outcome );
-			
+			callback( outcome );	
+		
 		} else {
-
+			
 			var outcome = {};
 			outcome.status = "Error"
 			outcome.text =  error;
 			
-			callback( outcome );
-
+			callback( outcome );		
+			
 		}
 	});
 
@@ -387,28 +389,31 @@ function getSpecies( server, name, callback ) {
 		nextname = name.toLowerCase();
 	}
 
-	var query = server+"/db/data/index/node/NAME/name/"+encodeURIComponent(name);
-	var querynext = server+"/db/data/index/node/NAME/name/"+encodeURIComponent(nextname);
-	// Still problem GET forward slash :O
+	// Possible names -> String dealt
+	var strname = "\""+name+"\"";
+	var strnextname = "\""+nextname+"\"";
 
-	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			
-			var arrayResult = JSON.parse( body );
+	var names = { "name": [ strname, strnextname ] };
+	
+	// First scientific names
+	neo4j.getInfobyField( server, "TAXID", { scientific_name: name }, function ( error, data ) {
+				
+		if (!error ) {
 
 			var outcome = new Array();
-
-			if ( arrayResult.length === 0 ) {
+			
+			if ( data.length === 0 ) {
 				
-				request( functions.getRequest( querynext ), function (error, response, body) {
-					if (!error && response.statusCode == 200) {
-
-						var arrayResult = JSON.parse( body );
+				// Then the rest
+				neo4j.getInfobyFieldArray( server, "TAXID", names, function ( error, data2 ) {
+				
+					if (!error ) {
+						
 						var outcome = new Array();
 
-						async.each( arrayResult, function( aResult, callback2 ) {
-							if ( aResult.data ) {
-								outcome.push( aResult.data );
+						async.each( data2, function( aResult, callback2 ) {
+							if ( aResult ) {
+								outcome.push( aResult );
 								callback2();
 							}
 						},
@@ -417,36 +422,38 @@ function getSpecies( server, name, callback ) {
 							callback( outcome );
 							return true;
 						});
-
+						
 					} else {
+						
 						var outcome = {};
 						outcome.status = "Error"
 						outcome.text =  error;
-						callback( outcome );
+			
+						callback( outcome );		
 					}
-
+				
 				});
-			} else {
 
-				for ( var i = 0; i < arrayResult.length; i++ ) {
-					if ( arrayResult[i].data ) {
-						outcome.push( arrayResult[i].data );
+			} else {
+				
+				for ( var i = 0; i < data.length; i++ ) {
+					if ( data[i] ) {
+						outcome.push( data[i] );
 					}
 				}
-	
 				callback( outcome );
 			}
-
+		
 		} else {
-
+			
 			var outcome = {};
 			outcome.status = "Error"
 			outcome.text =  error;
 			
-			callback( outcome );
-
+			callback( outcome );	
 		}
 	});
+	
 }
 
 function findRank ( outcome, rank, callback ) {

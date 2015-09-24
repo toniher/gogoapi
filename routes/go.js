@@ -1,4 +1,5 @@
 var functions = require('../functions/index.js');
+var neo4j = require('../functions/neo4j.js');
 var request = require('request');
 var async = require("async");
 var mysql = require('../mysql.js');
@@ -8,29 +9,23 @@ exports.getId = function( req, res ){
 	var acc = req.params.id;
 	var config = req.app.set('config');
 	
-	var query = config.neo4j.server+"/db/data/index/node/GO_TERM/acc/"+acc;
-
-	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+	var queryObj = {
+		"acc": acc,
+	};
+		
+	neo4j.getInfobyField( config.neo4j.server, "GO_TERM", queryObj, function ( error, data ) {
+				
+		if (!error ) {
+			functions.returnJSON( res, data );
 			
-			var arrayResult = JSON.parse( body );
-
-			var outcome = new Array();
-
-			for ( i = 0; i < arrayResult.length; i++ ) {
-				if ( arrayResult[i].data ) {
-					outcome.push( arrayResult[i].data );
-				}
-			}
-
-			functions.returnJSON( res, outcome );
 		} else {
-
+			
 			var outcome = {};
 			outcome.status = "Error"
 			outcome.text =  error;
-			functions.returnJSON( res, outcome );
-
+			
+			callback( outcome );		
+			
 		}
 	});
 	
