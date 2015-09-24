@@ -10,7 +10,7 @@ exports.getId = function( req, res ){
 	var config = req.app.set('config');
 	
 	var queryObj = {
-		"acc": acc,
+		acc: acc,
 	};
 		
 	neo4j.getInfobyField( config.neo4j.server, "GO_TERM", queryObj, function ( error, data ) {

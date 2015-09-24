@@ -287,7 +287,7 @@ exports.getTaxInfo = function( server, taxid, callback ) {
 function getInfo( server, taxid, callback ) {
 	
 	var queryObj = {
-		"id": parseInt( taxid, 10 ),
+		id: parseInt( taxid, 10 ),
 	};
 		
 	neo4j.getInfobyField( server, "TAXID", queryObj, function ( error, data ) {
@@ -435,6 +435,7 @@ function getSpecies( server, name, callback ) {
 				});
 
 			} else {
+				
 				
 				for ( var i = 0; i < data.length; i++ ) {
 					if ( data[i] ) {

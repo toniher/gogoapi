@@ -18,7 +18,7 @@
     "async": "0.2.x",
     "xml2js": "0.4.x",
     "nconf": "0.6.x",
-    "seraph": "0.13.x"
+    "neo4j": "2.0.0-RC2"
   },
   "author": "Toni Hermoso",
   "license": "GPL-3.0",
