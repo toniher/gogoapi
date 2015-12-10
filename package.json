@@ -1,6 +1,6 @@
 {
   "name": "gogoapi",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "API for GO and other Biological DBs",
   "main": "index.js",
   "scripts": {
@@ -12,12 +12,15 @@
     "api"
   ],
   "dependencies": {
-    "express": "3.x",
+    "express": "4.x",
+    "body-parser": "1.x",
+    "compression": "1.x",
+    "errorhandler": "1.x",
     "mysql": "2.x",
     "request": "2.x",
-    "async": "0.2.x",
+    "async": "1.x",
     "xml2js": "0.4.x",
-    "nconf": "0.6.x",
+    "nconf": "0.8.x",
     "neo4j": "2.0.0-RC2"
   },
   "author": "Toni Hermoso",

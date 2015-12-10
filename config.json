@@ -1,6 +1,6 @@
 {	
 	"express":{
-		"db": {
+		"mysql": {
 			"host": "localhost",
 			"user": "anonymous",
 			"password": "anonymous",
