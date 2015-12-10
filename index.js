@@ -1,25 +1,35 @@
 var express = require("express");
 var nconfig = require('./config.js');
 var config = nconfig.get("express");
+var errorhandler = require("errorhandler");
+var bodyParser = require('body-parser');
+var compression = require('compression');
 
 var app = express();
 
-var basepath = config.basepath;
+var basepath = "";
+
+if (config.basepath) {
+	basepath = config.basepath;
+}
 
 if ( config.jsonp ) {
 	app.set("jsonp callback", true);
 }
 
-// Config
-app.configure(function () {
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(app.router);
-	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	
-	app.set( "config", config);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-});
+// Config
+app.use(errorhandler({ dumpExceptions: true, showStack: true }));
+
+// Compression
+app.use(compression({
+  threshold: 512
+}));
+
+app.set("config", config);
+
 
 var functions = require('./functions/index.js');
 var go = require('./routes/go.js');
