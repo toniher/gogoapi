@@ -2,7 +2,7 @@ var functions = require('../functions/index.js');
 var neo4j = require('../functions/neo4j.js');
 var request = require('request');
 var async = require("async");
-var mysql = require('../mysql.js');
+var mysqlqueries = require('../functions/mysql.js');
 
 exports.getId = function( req, res ) {
 
@@ -82,51 +82,47 @@ exports.getCommonList = function( req, res ){
 
 	var connection;
 
-	mysql.handleDisconnect( config.db, function( connection ) {
-	
-		var list = req.params.list;
-	
-		var listarray = list.split("-");
-	
-		var listid = [];
-	
-		async.each( listarray, function( listitem, callback ) {
-			getTaxID( connection, listitem, listid, res, callback );
-	
-		}, function( err ) {
-	
-			// We generate list of ID to send
-			if ( listid.length > 0 ) {
-			
-				listidstr = listid.join("-");
-			
-				var query = config.neo4j.server+"/biodb/parent/common/tax/"+listidstr;
-			
-				request( functions.getRequest( query ), function (error, response, body) {
-					if (!error && response.statusCode == 200) {
-						
-						var jsonResult = JSON.parse( body );
-						connection.end();
-						functions.returnJSON( res, jsonResult);
-					} else {
-			
-						connection.end();
-						var outcome = {};
-						outcome.status = "Error"
-						outcome.text =  error;
-						functions.returnJSON( res, outcome);
-			
-					}
-				});
-			} else {
-	
-						connection.end();
-						var outcome = {};
-						outcome.msg = "No results!";
-						functions.returnJSON( res, outcome);
-			}
-		});
+	var list = req.params.list;
 
+	var listarray = list.split("-");
+
+	var listid = [];
+
+	async.each( listarray, function( listitem, callback ) {
+		mysqlqueries.getTaxID( listitem, listid, res, callback );
+
+	}, function( err ) {
+
+		// We generate list of ID to send
+		if ( listid.length > 0 ) {
+		
+			listidstr = listid.join("-");
+		
+			var query = config.neo4j.server+"/biodb/parent/common/tax/"+listidstr;
+		
+			request( functions.getRequest( query ), function (error, response, body) {
+				if (!error && response.statusCode == 200) {
+					
+					var jsonResult = JSON.parse( body );
+					connection.end();
+					functions.returnJSON( res, jsonResult);
+				} else {
+		
+					connection.end();
+					var outcome = {};
+					outcome.status = "Error"
+					outcome.text =  error;
+					functions.returnJSON( res, outcome);
+		
+				}
+			});
+		} else {
+
+					connection.end();
+					var outcome = {};
+					outcome.msg = "No results!";
+					functions.returnJSON( res, outcome);
+		}
 	});
 };
 
@@ -142,7 +138,8 @@ exports.getList = function(req, res) {
 		var acc = req.params.id;
 	
 		// First we check whether this exists in goassociation, if so, we are done.
-	
+		// TODO: we should move this to mysql.js
+
 		var sql = 'SELECT a.TAXON from goataxon a where a.`UniProtKB-AC` = ' + connection.escape(acc);
 		var sql2 = 'SELECT a.TAXON from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(acc);
 	
@@ -315,65 +312,6 @@ function getInfo( server, taxid, callback ) {
 		}
 	});
 
-}
-
-
-function getTaxID( connection, item, listid, res, callback ) {
-
-	// First we check whether this exists in goassociation, if so, we are done.
-
-	var sql = 'SELECT distinct(a.TAXON) from goataxon a where a.`UniProtKB-AC` = ' + connection.escape(item);
-	var sql2 = 'SELECT distinct(a.TAXON) from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(item);
-
-	connection.query(sql, function(err, results) {
-
-		if ( err ) {
-			functions.sendError( connection, res, err );
-		} else {
-
-			var golist = new Array();
-	
-			if ( results.length === 0 ) {
-
-				connection.query(sql2, function(err, results) {
-
-					if ( err ) {
-						functions.sendError( connection, res, err );
-					} else {
-		
-						var golist = new Array();
-
-						if ( results.length > 0 ) {
-
-							async.each( results, function( result, callback2 ){
-								golist.push( result.TAXON );
-								callback2();
-							},
-							function( err ) {
-								listid.push( golist[0] );
-								callback();
-							});
-		
-						} else {
-							//
-						}
-					}
-	
-				});
-	
-	
-			} else {
-	
-				for (i=0; i < results.length; i++) {
-					golist.push( results[i].TAXON );
-				}
-				listid.push( golist[0] );
-				callback();
-
-			}
-		}
-
-	});
 }
 
 
