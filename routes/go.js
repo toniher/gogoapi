@@ -82,7 +82,7 @@ exports.getCommonList = function( req, res ){
 	}, function( err ) {
 		
 		if ( err ) {
-			// TODO: Handle error functions.sendError( res, err );
+			functions.sendError( res, err );
 		}
 
 		var numEntries = listarray.length;
@@ -93,7 +93,9 @@ exports.getCommonList = function( req, res ){
 		
 		var typesgo = [];
 		for ( var typego in listGO ){
-			typesgo.push( typego );
+			if ( listGO.hasOwnProperty(typego) ) {
+				typesgo.push( typego );
+			}
 		}
 		
 		async.each( typesgo, function( typego, callback ) {
@@ -161,7 +163,7 @@ exports.getCommonList = function( req, res ){
 			}, function( err ) {
 				
 				if ( err ) {
-					functions.sendError( connection, res, err );
+					functions.sendError( res, err );
 				}
 				
 				for ( var h=0; h < highlighted.length; h++ ) {
@@ -181,7 +183,7 @@ exports.getCommonList = function( req, res ){
 		}, function ( err ) {
 			
 			if ( err ) {
-				functions.sendError( connection, res, err );
+				functions.sendError( res, err );
 			}
 			
 			// Let's add name to ListGO
@@ -212,84 +214,6 @@ exports.getCommonList = function( req, res ){
 };
 
 
-function getGO( connection, item, listGO, listdesc, res, callback ) {
-
-	// First we check whether this exists in goassociation, if so, we are done.
-	var sql = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t where t.acc=a.GO AND a.`UniProtKB-AC` = ' + connection.escape(item);
-	var sql2 = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t, idmapping i where t.acc=a.GO AND a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(item);
-
-	connection.query(sql, function(err, results) {
-
-		if ( err ) {
-			functions.sendError( connection, res, err );
-		} else {
-
-			var golist = new Array();
-	
-			if ( results.length === 0 ) {
-
-				connection.query(sql2, function(err, results) {
-
-					if ( err ) {
-						functions.sendError( connection, res, err );
-					} else {
-		
-						var golist = new Array();
-
-						if ( results.length > 0 ) {
-
-							async.each( results, function( result, callback2 ){
-								
-								golist.push( { acc: result.GO, term_type: result.term_type, name: result.name } );
-								callback2();
-							},
-							function( err ) {
-
-								for ( var i = 0; i < golist.length; i++ ) {
-
-									var term_type = golist[i].term_type;
-									var acc = golist[i].acc;
-									var name = golist[i].name;
-									listGO[term_type].push( acc );
-									listdesc[ acc ] = name;
-									//listGO[term_type].pushIfNotExist( acc, function(e) { 
-									//	return e === acc; 
-									//});
-								}
-
-								callback();
-							});
-		
-						} else {
-							// Temporary sendError
-							functions.sendError( connection, res, err );
-						}
-					}
-	
-				});
-	
-	
-			} else {
-	
-				for ( var i = 0; i < results.length; i++ ) {
-	
-					var term_type = results[i].term_type;
-					var acc = results[i].GO;
-					var name = results[i].name;
-					listGO[term_type].push( acc );
-					listdesc[ acc ] = name;
-					//listGO[term_type].pushIfNotExist( acc,  function(e) { 
-					//	return e === acc; 
-					//});
-				}
-				callback();
-
-			}
-		}
-
-	});
-
-}
 
 function getCommonGO( config, listGO, array, typego, callback ) {
 	
@@ -298,7 +222,7 @@ function getCommonGO( config, listGO, array, typego, callback ) {
 	var query = server+"/biodb/parent/common/go/"+listGO.join("-");
 	
 	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 			
 			var jsonResult = JSON.parse( body );
 			if ( config.rootGO[typego] !== jsonResult.acc ) {

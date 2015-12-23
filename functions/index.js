@@ -54,7 +54,7 @@ exports.addProp = function( data, param, value, callback ) {
 	callback( data );
 }
 
-exports.sendError = function( connection, res, err ) {
+exports.sendError = function( res, err ) {
 
 	//connection.end();
 	var outcome = {};
