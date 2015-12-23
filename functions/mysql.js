@@ -33,6 +33,7 @@ exports.getTaxID = function( listitem, listid, res, callback ) {
 
 							if ( err) {
 								functions.sendError( connection, res, err );
+								connection.release();
 							} else {
   
 							  async.each( rows , function( row, cmysql ) {
