@@ -41,7 +41,7 @@ exports.getCommon = function( req, res ){
 	var query = config.neo4j.server+"/biodb/parent/common/go/"+list;
 
 	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 			
 			var jsonResult = JSON.parse( body );
 			functions.returnJSON( res, jsonResult );
@@ -56,6 +56,29 @@ exports.getCommon = function( req, res ){
 	});
 
 };
+
+exports.getList = function( req, res ){
+
+	var config = req.app.set('config');
+	
+	var listitem = req.params.id;
+
+	// we store list GO here
+	var listGO = {
+		"molecular_function": [],
+		"biological_process": [],
+		"cellular_component": []
+	};
+
+	// We store descriptions here
+	var listdesc = {};
+
+	mysqlqueries.getGO( listitem, listGO, listdesc, res, function() {
+
+		functions.returnJSON( res, {"acc":listitem, "list":listGO} );
+	});
+};
+
 
 exports.getCommonList = function( req, res ){
 
