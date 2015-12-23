@@ -67,6 +67,8 @@ exports.getTaxID = function( listitem, listID, res, callback ) {
 				
 				// Don't use the connection here, it has been returned to the pool.
 			});
+		} else {
+			functions.sendError( res, err );
 		}
 	});
 
@@ -86,7 +88,7 @@ exports.getGO = function( item, listGO, listdesc, res, callback ) {
 			connection.query(sql, function(err, results) {
 
 				if ( err ) {
-					functions.sendError( connection, res, err );
+					functions.sendError( res, err );
 					connection.release();
 				} else {
 		
@@ -97,7 +99,7 @@ exports.getGO = function( item, listGO, listdesc, res, callback ) {
 						connection.query(sql2, function(err, results) {
 		
 							if ( err ) {
-								functions.sendError( connection, res, err );
+								functions.sendError( res, err );
 								connection.release();
 							} else {
 				
@@ -130,7 +132,7 @@ exports.getGO = function( item, listGO, listdesc, res, callback ) {
 				
 								} else {
 									// Temporary sendError
-									functions.sendError( connection, res, err );
+									functions.sendError( res, err );
 									connection.release();
 								}
 							}
@@ -158,6 +160,8 @@ exports.getGO = function( item, listGO, listdesc, res, callback ) {
 		
 			});
 
+		} else {
+			functions.sendError( res, err );
 		}
 
 	});
