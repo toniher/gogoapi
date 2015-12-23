@@ -44,7 +44,7 @@ exports.addPropFirst = function( data, param, value, callback ) {
 		data[0][param] = value;
 	}
 	callback( data );
-}
+};
 
 exports.addProp = function( data, param, value, callback ) {
 
@@ -52,7 +52,7 @@ exports.addProp = function( data, param, value, callback ) {
 		data[param] = value;
 	}
 	callback( data );
-}
+};
 
 exports.sendError = function( res, err ) {
 
@@ -62,7 +62,7 @@ exports.sendError = function( res, err ) {
 	// Allowing other error msgss
 	err = typeof err !== 'undefined' ? err : "Error!";
 	
-	outcome.status = "Error"
+	outcome.status = "Error";
 	outcome.text =  err;
 	functions.returnJSON( res, outcome );
 };
@@ -113,6 +113,6 @@ function combinationUtil( arr, data, start, end, index, r, repo ) {
 		data[index] = arr[i];
 		combinationUtil(arr, data, i+1, end, index+1, r, repo);
 	}
-};
+}
 
 

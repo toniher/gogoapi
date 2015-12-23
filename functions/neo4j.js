@@ -18,7 +18,7 @@ exports.getInfobyFieldArray = function( server, label, array, cb ) {
     var db = new neo4j.GraphDatabase( server );
 
     // Cypher query
-    var cypher = "MATCH (n:TAXID) "
+    var cypher = "MATCH (n:TAXID) ";
     
     var whereArr = [];
     var keys = Object.keys( array );

@@ -21,7 +21,7 @@ exports.getId = function( req, res ){
 		} else {
 			
 			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			
 			functions.returnJSON( res, outcome );
@@ -48,7 +48,7 @@ exports.getCommon = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			functions.returnJSON( res, outcome );
 

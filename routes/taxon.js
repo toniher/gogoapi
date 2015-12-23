@@ -27,7 +27,7 @@ exports.getId = function( req, res ) {
 			if ( err ) {
 			
 				var outcome = {};
-				outcome.status = "Error"
+				outcome.status = "Error";
 				outcome.text =  err;
 				functions.returnJSON( res, outcome );
 			
@@ -69,7 +69,7 @@ exports.getCommon = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			functions.returnJSON( res, outcome );
 
@@ -111,7 +111,7 @@ exports.getCommonList = function( req, res ){
 		
 					connection.end();
 					var outcome = {};
-					outcome.status = "Error"
+					outcome.status = "Error";
 					outcome.text =  error;
 					functions.returnJSON( res, outcome);
 		
@@ -158,15 +158,15 @@ exports.getRankAll = function( req, res ){
 	
 	var config = req.app.set('config');
 	var taxid = req.params.id;
-	
+	var outcome = {};
+
 	var query = config.neo4j.server+"/biodb/parent/path/tax/"+taxid+"/1";
 
 	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 			
 			var arrayResult = JSON.parse( body );
 
-			var outcome = {};
 			
 			if ( arrayResult.length > 0 ) {
 				outcome = arrayResult;
@@ -176,8 +176,7 @@ exports.getRankAll = function( req, res ){
 			
 		} else {
 
-			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			
 			functions.returnJSON( res, outcome );
@@ -210,7 +209,7 @@ exports.getRank = function( req, res ){
 		} else {
 
 			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			
 			functions.returnJSON( res, outcome );
@@ -230,13 +229,13 @@ function getInfo( server, taxid, callback ) {
 	var queryObj = {
 		id: parseInt( taxid, 10 ),
 	};
-		
+
+	var outcome;
+
 	neo4j.getInfobyField( server, "TAXID", queryObj, function ( error, data ) {
 				
 		if (!error ) {
 
-			var outcome;
-			
 			if ( data.length > 0 ) {
 				outcome = data[0];
 			} else {
@@ -247,11 +246,11 @@ function getInfo( server, taxid, callback ) {
 		
 		} else {
 			
-			var outcome = {};
-			outcome.status = "Error"
+			outcome = {};
+			outcome.status = "Error";
 			outcome.text =  error;
 			
-			callback( outcome );		
+			callback( outcome );
 			
 		}
 	});
@@ -308,10 +307,10 @@ function getSpecies( server, name, callback ) {
 					} else {
 						
 						var outcome = {};
-						outcome.status = "Error"
+						outcome.status = "Error";
 						outcome.text =  error;
 			
-						callback( outcome );		
+						callback( outcome );
 					}
 				
 				});
@@ -330,10 +329,10 @@ function getSpecies( server, name, callback ) {
 		} else {
 			
 			var outcome = {};
-			outcome.status = "Error"
+			outcome.status = "Error";
 			outcome.text =  error;
 			
-			callback( outcome );	
+			callback( outcome );
 		}
 	});
 	
