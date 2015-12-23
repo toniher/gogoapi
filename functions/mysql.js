@@ -16,93 +16,62 @@ var pool  = mysql.createPool({
 
 exports.getTaxID = function( listitem, listid, res, callback ) {
 
-
 	var listID = [];
-
+	
 	pool.getConnection(function(err, connection) {
-
+	
 		if ( ! err ) {
-
-			var sql = "...";
+	
+			var sql = 'SELECT distinct(a.TAXON) from goataxon a where a.`UniProtKB-AC` = ' + connection.escape(listitem);
 			connection.query( sql, function(err, rows) {
 
 				if ( !err ) {
 					
-					async.each( rows , function( row, cmysql ) {
-						listID.push(  );
-						cmysql();
-					}, function( err ) {
-						callback();
-					});
+					if ( rows.length === 0 ) {
+						var sql2 = 'SELECT distinct(a.TAXON) from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(listitem);
+						connection.query( sql2, function(err, rows) {
+
+							if ( err) {
+								functions.sendError( connection, res, err );
+							} else {
+  
+							  async.each( rows , function( row, cmysql ) {
+								  if ( row.hasOwnProperty('TAXON') ) {
+									  listID.push(  row.TAXON );
+								  }
+								  cmysql();
+							  }, function( err ) {
+								  callback();
+								  connection.release();
+							  });
+						  }
+						});
+					} else {
+  
+						async.each( rows , function( row, cmysql ) {
+							if ( row.hasOwnProperty('TAXON') ){
+								listID.push(  row.TAXON );
+							}
+							cmysql();
+						}, function( err ) {
+							callback();
+							connection.release();
+
+						});
+					}
+
+				} else {
+					functions.sendError( connection, res, err );
+					connection.release();
 				}
-				// And done with the connection.
-				connection.release();
+	
 				
 				// Don't use the connection here, it has been returned to the pool.
 			});
 		}
 	});
 
-// TODO: This should be moved to mysql.js
-//
-//function getTaxID( connection, item, listid, res, callback ) {
-//
-//	// First we check whether this exists in goassociation, if so, we are done.
-//
-//	var sql = 'SELECT distinct(a.TAXON) from goataxon a where a.`UniProtKB-AC` = ' + connection.escape(item);
-//	var sql2 = 'SELECT distinct(a.TAXON) from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(item);
-//
-//	connection.query(sql, function(err, results) {
-//
-//		if ( err ) {
-//			functions.sendError( connection, res, err );
-//		} else {
-//
-//			var golist = new Array();
-//	
-//			if ( results.length === 0 ) {
-//
-//				connection.query(sql2, function(err, results) {
-//
-//					if ( err ) {
-//						functions.sendError( connection, res, err );
-//					} else {
-//		
-//						var golist = new Array();
-//
-//						if ( results.length > 0 ) {
-//
-//							async.each( results, function( result, callback2 ){
-//								golist.push( result.TAXON );
-//								callback2();
-//							},
-//							function( err ) {
-//								listid.push( golist[0] );
-//								callback();
-//							});
-//		
-//						} else {
-//							//
-//						}
-//					}
-//	
-//				});
-//	
-//	
-//			} else {
-//	
-//				for (i=0; i < results.length; i++) {
-//					golist.push( results[i].TAXON );
-//				}
-//				listid.push( golist[0] );
-//				callback();
-//
-//			}
-//		}
-//
-//	});
-//}
-
+};
 
 //exports.getList = function(req, res) {
 //
