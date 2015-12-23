@@ -131,80 +131,23 @@ exports.getCommonList = function( req, res ){
 exports.getList = function(req, res) {
 
 	var config = req.app.set('config');
+	var acc = req.params.id;
 
-	var connection;
+	var listID = [];
+	mysqlqueries.getTaxID( acc, listID, res, function() {
 
-	mysql.handleDisconnect( config.db, function( connection ) {
-
-		var acc = req.params.id;
-	
-		// First we check whether this exists in goassociation, if so, we are done.
-		// TODO: we should move this to mysql.js
-
-		var sql = 'SELECT a.TAXON from goataxon a where a.`UniProtKB-AC` = ' + connection.escape(acc);
-		var sql2 = 'SELECT a.TAXON from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(acc);
-	
-		connection.query(sql, function(err, results) {
-	
-			if ( err ) {
-				functions.sendError( connection, res, err );
-			} else {
-	
-				var golist = new Array();
-		
-				if ( results.length === 0 ) {
-	
-					connection.query(sql2, function(err, results) {
-	
-						if ( err ) {
-							functions.sendError( connection, res, err );
-						} else {
-			
-							var golist = new Array();
-	
-							if ( results.length > 0 ) {
-	
-								async.each( results, function( result, callback ){
-									golist.push( result.TAXON );
-									callback();
-								},
-								function( err ) {
-									connection.end();
-									getInfo( config.neo4j.server, golist[0], function( data ) {
-										// We put original accession and let's have fun
-										functions.addProp( data, "acc", acc, function( output ) {
-											functions.returnJSON( res, output );
-										});
-									});
-								});
-			
-							} else {
-								connection.end();
-								// There can be cases such as deleted entries!
-								// Check http://www.uniprot.org/uniprot/B4RX92?version=*
-								functions.returnJSON( res, { "msg": "No results!", "acc":acc });
-							}
-						}
-		
-					});
-		
-		
-				} else {
-		
-					for (i=0; i < results.length; i++) {
-						golist.push( results[i].TAXON );
-					}
-					connection.end();
-					getInfo( config.neo4j.server, golist[0], function( data ) {
-						// We put original accession and let's have fun
-						functions.addProp( data, "acc", acc, function( output ) {
-							functions.returnJSON( res, output);
-						}); 
-					});
-				}
-			}
-	
-		});
+		if ( listID.length === 0 ) {
+			// There can be cases such as deleted entries!
+			// Check http://www.uniprot.org/uniprot/B4RX92?version=*
+			functions.returnJSON( res, { "msg": "No results!", "acc":acc });
+		} else {
+			getInfo( config.neo4j.server, listID[0], function( data ) {
+				// We put original accession and let's have fun
+				functions.addProp( data, "acc", acc, function( output ) {
+					functions.returnJSON( res, output );
+				});
+			});
+		}
 	});
 
 };
@@ -339,7 +282,7 @@ function getSpecies( server, name, callback ) {
 				
 		if (!error ) {
 
-			var outcome = new Array();
+			var outcome = [];
 			
 			if ( data.length === 0 ) {
 				
@@ -348,7 +291,7 @@ function getSpecies( server, name, callback ) {
 				
 					if (!error ) {
 						
-						var outcome = new Array();
+						var outcome = [];
 
 						async.each( data2, function( aResult, callback2 ) {
 							if ( aResult ) {
