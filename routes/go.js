@@ -2,7 +2,7 @@ var functions = require('../functions/index.js');
 var neo4j = require('../functions/neo4j.js');
 var request = require('request');
 var async = require("async");
-var mysql = require('../mysql.js');
+var mysqlqueries = require('../functions/mysql.js');
 
 exports.getId = function( req, res ){
 
@@ -24,7 +24,7 @@ exports.getId = function( req, res ){
 			outcome.status = "Error"
 			outcome.text =  error;
 			
-			callback( outcome );		
+			functions.returnJSON( res, outcome );
 			
 		}
 	});
@@ -60,229 +60,152 @@ exports.getCommon = function( req, res ){
 exports.getCommonList = function( req, res ){
 
 	var config = req.app.set('config');
+	
+	var list = req.params.list;
 
-	var connection;
+	var listarray = list.split("-");
 
-	mysql.handleDisconnect( config.db, function( connection ) {
+	// we store list GO here
+	var listGO = {
+		"molecular_function": [],
+		"biological_process": [],
+		"cellular_component": []
+	};
 	
-		var list = req.params.list;
-	
-		var listarray = list.split("-");
-	
-		// we store list GO here
-		var listGO = {
-			"molecular_function": [],
-			"biological_process": [],
-			"cellular_component": []
-		};
+	// We store descriptions here
+	var listdesc = {};
+
+	async.each( listarray, function( listitem, callback ) {
+		// TODO: MySQL queries
+		mysqlqueries.getGO( listitem, listGO, listdesc, res, callback );
+
+	}, function( err ) {
 		
-		// We store descriptions here
-		var listdesc = {};
-	
-		async.each( listarray, function( listitem, callback ) {
-			getGO( connection, listitem, listGO, listdesc, res, callback );
-	
-		}, function( err ) {
+		if ( err ) {
+			// TODO: Handle error functions.sendError( res, err );
+		}
+
+		var numEntries = listarray.length;
+		var highlight = numEntries;
+		if ( numEntries > 2 ) {
+			highlight = Math.ceil( numEntries/2 ) + 1; //Formula for highlighting
+		}
+		
+		var typesgo = [];
+		for ( var typego in listGO ){
+			typesgo.push( typego );
+		}
+		
+		async.each( typesgo, function( typego, callback ) {
 			
-			if ( err ) {
-				functions.sendError( connection, res, err );
-			}
-	
-			var numEntries = listarray.length;
-			var highlight = numEntries;
-			if ( numEntries > 2 ) {
-				highlight = Math.ceil( numEntries/2 ) + 1; //Formula for highlighting
-			}
+			console.log("Type: "+typego);
+			var countGO = {};
 			
-			var typesgo = [];
-			for ( var typego in listGO ){
-				typesgo.push( typego );
-			}
-			
-			async.each( typesgo, function( typego, callback ) {
-				
-				console.log("Type: "+typego);
-				var countGO = {};
-				
-				for (var v=0; v < listGO[typego].length; v++ ) {
-					if ( listGO[typego][v] in countGO ) {
-						countGO[listGO[typego][v]]+=1;
-					} else {
-						countGO[listGO[typego][v]]=1;
-					}
+			for (var v=0; v < listGO[typego].length; v++ ) {
+				if ( listGO[typego][v] in countGO ) {
+					countGO[listGO[typego][v]]+=1;
+				} else {
+					countGO[listGO[typego][v]]=1;
 				}
-				
-				var highlighted = [];
-				var less = [];
-				var allpre = [];
-				
-				for ( var k in countGO ){
-					if ( countGO.hasOwnProperty(k) ) {
-						if ( countGO[k] >= highlight ) {
-							highlighted.push( k );
-						} else {
-							less.pushIfNotExist( k, function(e) { 
-								return e === k; 
-							});
-						}
-						
-						allpre.pushIfNotExist( k, function(e) { 
+			}
+			
+			var highlighted = [];
+			var less = [];
+			var allpre = [];
+			
+			for ( var k in countGO ){
+				if ( countGO.hasOwnProperty(k) ) {
+					if ( countGO[k] >= highlight ) {
+						highlighted.push( k );
+					} else {
+						less.pushIfNotExist( k, function(e) { 
 							return e === k; 
 						});
 					}
+					
+					allpre.pushIfNotExist( k, function(e) { 
+						return e === k; 
+					});
+				}
+			}
+			
+			var rest = [];
+			var common = [];
+
+			
+			console.log( "High: "+highlighted );
+			console.log( "Less: "+less );
+			// Commutations of Less
+			var r = Math.ceil( ( less.length ) / 2 );
+			// If only two, compare two
+			if ( less.length === 2 ) {
+				r = 2;
+			}
+			
+			// At least compare 2 for being representative
+			if ( r > 1 ) {
+
+				// We choose entries first to consider;
+				functions.printCombination( less, r, rest );
+				
+			}
+			
+			async.each( rest, function( item, callback2 ) {
+				
+				if ( item.length > 0 ) {
+					getCommonGO( config, item, common, typego, callback2 );
+				} else {
+					callback2();
 				}
 				
-				var rest = [];
-				var common = [];
-	
-				
-				console.log( "High: "+highlighted );
-				console.log( "Less: "+less );
-				// Commutations of Less
-				var r = Math.ceil( ( less.length ) / 2 );
-				// If only two, compare two
-				if ( less.length === 2 ) {
-					r = 2;
-				}
-				
-				// At least compare 2 for being representative
-				if ( r > 1 ) {
-	
-					// We choose entries first to consider;
-					functions.printCombination( less, r, rest );
-					
-				}
-				
-				async.each( rest, function( item, callback2 ) {
-					
-					if ( item.length > 0 ) {
-						getCommonGO( config, item, common, typego, callback2 );
-					} else {
-						callback2();
-					}
-					
-				}, function( err ) {
-					
-					if ( err ) {
-						functions.sendError( connection, res, err );
-					}
-					
-					for ( var h=0; h < highlighted.length; h++ ) {
-						common.pushIfNotExist( highlighted[h], function(e) { 
-							return e === highlighted[h]; 
-						});
-					}
-					
-					// Let's clear previous listGO
-					listGO[typego].length = 0;
-					listGO[typego] = common;
-					// console.log( "COMMON - "+typego+": "+common );
-					callback();
-				});
-				
-				//console.log( all );
-			}, function ( err ) {
+			}, function( err ) {
 				
 				if ( err ) {
 					functions.sendError( connection, res, err );
 				}
 				
-				// Let's add name to ListGO
-				var finalGO = {};
-				for ( var k in listGO ){
-					if ( listGO.hasOwnProperty(k) ) {
-						
-						finalGO[k] = [];
-						
-						for ( var f=0; f < listGO[k].length; f++ ) {
-							var acc = listGO[k][f];
-							var name = listdesc[acc];
-							var go = {
-								"acc": acc,
-								"name": name
-							};
-							finalGO[k].push( go );
-						}
-						
-					}
+				for ( var h=0; h < highlighted.length; h++ ) {
+					common.pushIfNotExist( highlighted[h], function(e) { 
+						return e === highlighted[h]; 
+					});
 				}
 				
-				// connection.end();
-				functions.returnJSON( res, finalGO);
+				// Let's clear previous listGO
+				listGO[typego].length = 0;
+				listGO[typego] = common;
+				// console.log( "COMMON - "+typego+": "+common );
+				callback();
 			});
-	
-		});
-	});
-
-};
-
-exports.getList = function(req, res) {
-
-	var config = req.app.set('config');
-	
-	var connection;
-
-	mysql.handleDisconnect( config.db, function( connection ) {
-	
-		var acc = req.params.id;
-	
-		// First we check whether this exists in goassociation, if so, we are done.
-	
-		var sql = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t where a.GO = t.acc AND a.`UniProtKB-AC` = ' + connection.escape(acc);
-	
-		var sql2 = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t, idmapping i where a.GO = t.acc AND a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(acc);
-	
-	
-		// TODO: we should differentiate by GOtype
-	
-		connection.query(sql, function(err, results) {
-	
+			
+			//console.log( all );
+		}, function ( err ) {
+			
 			if ( err ) {
 				functions.sendError( connection, res, err );
-			} else {
-	
-				var golist = new Array();
-		
-				if ( results.length === 0 ) {
-	
-					connection.query(sql2, function(err, results) {
-	
-						if ( err ) {
-							functions.sendError( connection, res, err );
-						} else {
+			}
 			
-							var golist = new Array();
-	
-							if ( results.length > 0 ) {
-	
-								async.each( results, function( result, callback ){
-									golist.push( result );
-									callback();
-								},
-								function( err ) {
-									// connection.end();
-									functions.returnJSON( res, {"acc":acc, "list":golist} );
-								});
-			
-							} else {
-								// connection.end();
-								functions.returnJSON( res, {"acc":acc, "list":golist});
-							}
-						}
-		
-					});
-		
-		
-				} else {
-		
-					for (i=0; i < results.length; i++) {
-						golist.push( results[i] );
+			// Let's add name to ListGO
+			var finalGO = {};
+			for ( var k in listGO ){
+				if ( listGO.hasOwnProperty(k) ) {
+					
+					finalGO[k] = [];
+					
+					for ( var f=0; f < listGO[k].length; f++ ) {
+						var acc = listGO[k][f];
+						var name = listdesc[acc];
+						var go = {
+							"acc": acc,
+							"name": name
+						};
+						finalGO[k].push( go );
 					}
-					// connection.end();
-					functions.returnJSON( res, {"acc":acc, "list":golist});
+					
 				}
 			}
-	
+			
+			// connection.end();
+			functions.returnJSON( res, finalGO);
 		});
 	});
 

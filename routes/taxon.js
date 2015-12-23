@@ -9,13 +9,14 @@ exports.getId = function( req, res ) {
 	var config = req.app.set('config');
 	var taxid = req.params.id;
 
+	var outcome = [];
+
 	if ( taxid.indexOf("-") < 0 ) {
 		getInfo( config.neo4j.server, taxid, function( data ) {
 			functions.returnJSON( res, data );
 		});
 	} else {
 		var listTaxid = taxid.split("-");
-		var outcome = [];
 		// TODO: Check whether we handle well multiple nodes at once
 		async.eachSeries( listTaxid, function( taxval, cb ) {
 			getInfo( config.neo4j.server, taxval, function( data ) {
@@ -61,7 +62,7 @@ exports.getCommon = function( req, res ){
 	var query = config.neo4j.server+"/biodb/parent/common/tax/"+list;
 
 	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 			
 			var jsonResult = JSON.parse( body );
 			functions.returnJSON( res, jsonResult );
