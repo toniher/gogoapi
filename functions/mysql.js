@@ -10,7 +10,7 @@ var pool  = mysql.createPool({
   host     : config.mysql.host,
   user     : config.mysql.user,
   password : config.mysql.password,
-  database : config.mysql.db
+  database : config.mysql.database
 });
 
 
