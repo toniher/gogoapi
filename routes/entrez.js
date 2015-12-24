@@ -78,12 +78,12 @@ exports.getTaxonIdXML = function(req, res) {
 	var db = req.params.db;
 	var acc = req.params.id;
 
-	var session = "&tool="+entrez.tool+"&email="+entrez.email;
+	var session = "&tool="+config.entrez.tool+"&email="+config.entrez.email;
 
 	var query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db="+db+"&id="+acc+"&retmode=xml&version=2.0"+session;
 
 	request( functions.getRequestXML( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 	
 			var parseString = xml2js.parseString;
 
