@@ -17,7 +17,7 @@ exports.getTaxonId = function(req, res) {
 	var query = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db="+db+"&id="+acc+"&retmode=json&version=2.0"+session;
 
 	request( functions.getRequest( query ), function (error, response, body) {
-		if (!error && response.statusCode == 200) {
+		if (!error && response.statusCode === 200) {
 	
 			var result = JSON.parse( body );
 
