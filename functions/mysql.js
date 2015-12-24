@@ -60,7 +60,7 @@ exports.getTaxID = function( listitem, listID, res, callback ) {
 					}
 
 				} else {
-					functions.sendError( connection, res, err );
+					functions.sendError( res, err );
 					connection.release();
 				}
 	
