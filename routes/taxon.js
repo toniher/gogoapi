@@ -81,8 +81,6 @@ exports.getCommonList = function( req, res ){
 
 	var config = req.app.set('config');
 
-	var connection;
-
 	var list = req.params.list;
 
 	var listarray = list.split("-");
@@ -97,19 +95,17 @@ exports.getCommonList = function( req, res ){
 		// We generate list of ID to send
 		if ( listid.length > 0 ) {
 		
-			listidstr = listid.join("-");
+			var listidstr = listid.join("-");
 		
 			var query = config.neo4j.server+"/biodb/parent/common/tax/"+listidstr;
 		
 			request( functions.getRequest( query ), function (error, response, body) {
-				if (!error && response.statusCode == 200) {
+				if (!error && response.statusCode === 200) {
 					
 					var jsonResult = JSON.parse( body );
-					connection.end();
 					functions.returnJSON( res, jsonResult);
 				} else {
 		
-					connection.end();
 					var outcome = {};
 					outcome.status = "Error";
 					outcome.text =  error;
@@ -119,7 +115,6 @@ exports.getCommonList = function( req, res ){
 			});
 		} else {
 
-					connection.end();
 					var outcome = {};
 					outcome.msg = "No results!";
 					functions.returnJSON( res, outcome);

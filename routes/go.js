@@ -229,7 +229,6 @@ exports.getCommonList = function( req, res ){
 				}
 			}
 			
-			// connection.end();
 			functions.returnJSON( res, finalGO);
 		});
 	});
