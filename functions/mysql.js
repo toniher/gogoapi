@@ -82,8 +82,8 @@ exports.getGO = function( item, listGO, listdesc, res, callback ) {
 		if ( ! err ) {
 
 			// First we check whether this exists in goassociation, if so, we are done.
-			var sql = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t where t.acc=a.GO AND a.`UniProtKB-AC` = ' + connection.escape(item);
-			var sql2 = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t, idmapping i where t.acc=a.GO AND a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(item);
+			var sql = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t where t.acc=a.GO AND a.`ID` = ' + connection.escape(item);
+			var sql2 = 'SELECT distinct(a.GO), t.term_type, t.name from goassociation a, term t, idmapping i where t.acc=a.GO AND a.`ID` = i.`UniProtKB-AC` and i.ID=' + connection.escape(item);
 	
 			connection.query(sql, function(err, results) {
 
