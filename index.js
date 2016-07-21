@@ -1,5 +1,8 @@
 var express = require("express");
-var nconfig = require('./config.js');
+
+// Assuming first arg is a conf.js file
+var nconfig = require('./config.js')(args[0]);
+
 var config = nconfig.get("express");
 var errorhandler = require("errorhandler");
 var bodyParser = require('body-parser');
