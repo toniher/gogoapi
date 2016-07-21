@@ -1,5 +1,7 @@
 var express = require("express");
 
+var args = process.argv.slice(2);
+
 // Assuming first arg is a conf.js file
 var nconfig = require('./config.js')(args[0]);
 
