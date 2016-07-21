@@ -88,7 +88,7 @@ exports.getCommonList = function( req, res ){
 	var listid = [];
 
 	async.each( listarray, function( listitem, callback ) {
-		mysqlqueries.getTaxID( listitem, listid, res, callback );
+		mysqlqueries.getTaxID( mysqlqueries.getPool( config ), listitem, listid, res, callback );
 
 	}, function( err ) {
 
@@ -129,7 +129,7 @@ exports.getList = function(req, res) {
 	var acc = req.params.id;
 
 	var listID = [];
-	mysqlqueries.getTaxID( acc, listID, res, function() {
+	mysqlqueries.getTaxID( mysqlqueries.getPool( config ), acc, listID, res, function() {
 
 		if ( listID.length === 0 ) {
 			// There can be cases such as deleted entries!

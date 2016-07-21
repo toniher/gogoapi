@@ -3,18 +3,20 @@ var mysql = require('mysql');
 var async = require('async');
 var functions = require('./index.js');
 
-var nconfig = require('../config.js');
-var config = nconfig.get("express");
+exports.getPool = function( config, callback ) {
 
-var pool  = mysql.createPool({
-  host     : config.mysql.host,
-  user     : config.mysql.user,
-  password : config.mysql.password,
-  database : config.mysql.database
-});
+	var pool  = mysql.createPool({
+		host     : config.mysql.host,
+		user     : config.mysql.user,
+		password : config.mysql.password,
+		database : config.mysql.database
+	});
 
+	callback( pool );
 
-exports.getTaxID = function( listitem, listID, res, callback ) {
+};
+
+exports.getTaxID = function( pool, listitem, listID, res, callback ) {
 	
 	pool.getConnection(function(err, connection) {
 	
@@ -75,7 +77,7 @@ exports.getTaxID = function( listitem, listID, res, callback ) {
 };
 
 
-exports.getGO = function( item, listGO, listdesc, res, callback ) {
+exports.getGO = function( pool, item, listGO, listdesc, res, callback ) {
 
 	pool.getConnection(function(err, connection) {
 

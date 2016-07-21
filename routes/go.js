@@ -73,7 +73,7 @@ exports.getList = function( req, res ){
 	// We store descriptions here
 	var listdesc = {};
 
-	mysqlqueries.getGO( listitem, listGO, listdesc, res, function() {
+	mysqlqueries.getGO( mysqlqueries.getPool( config ), listitem, listGO, listdesc, res, function() {
 
 		functions.returnJSON( res, {"acc":listitem, "list":listGO} );
 	});
@@ -100,7 +100,7 @@ exports.getCommonList = function( req, res ){
 
 	async.each( listarray, function( listitem, callback ) {
 		// TODO: MySQL queries
-		mysqlqueries.getGO( listitem, listGO, listdesc, res, callback );
+		mysqlqueries.getGO( mysqlqueries.getPool( config ), listitem, listGO, listdesc, res, callback );
 
 	}, function( err ) {
 		
