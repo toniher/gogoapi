@@ -103,8 +103,30 @@ exports.getCommonListUniProt = function( req, res ){
 	mysqlqueries.getPool( config, function( pool ) {
 
 		mysqlqueries.getUniProt( pool, listarray, res, function( mapping ) {
-			console.log( mapping );
-			functions.returnJSON( res, mapping );
+			var keys = Object.keys(mapping);
+			var values = keys.map(function(v) { return mapping[v]; });
+
+			if ( values.length > 0 ) {
+
+				var query = config.neo4j.server+config.neo4j.extpath+"/rels/go/"+values.join("-");
+			
+				request( functions.getRequest( query ), function (error, response, body) {
+					if (!error && response.statusCode === 200) {
+						
+						var jsonResult = JSON.parse( body );
+						functions.returnJSON( res, { "outcome": jsonResult, "query": mapping } );
+					} else {
+			
+						var outcome = {};
+						outcome.status = "Error";
+						outcome.text =  error;
+						functions.returnJSON( res, outcome );
+			
+					}
+				});
+			} else {
+				functions.returnJSON( res, { "query": mapping } );
+			}
 		});
 	});
 
