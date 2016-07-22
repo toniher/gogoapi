@@ -10,7 +10,8 @@
 			"protocol": "http",
 			"host": "localhost",
 			"port": "7474",
-			"server": "http://localhost:7474"
+			"server": "http://localhost:7474",
+			"extpath": "/biodb"
 		},
 		"entrez": {
 			"tool": "GOGOAPI",

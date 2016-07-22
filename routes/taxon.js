@@ -59,7 +59,7 @@ exports.getCommon = function( req, res ){
 	var list = req.params.list;
 	var config = req.app.set('config');
 	
-	var query = config.neo4j.server+"/biodb/parent/common/tax/"+list;
+	var query = config.neo4j.server+config.neo4j.extpath+"/parent/common/tax/"+list;
 
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -97,7 +97,7 @@ exports.getCommonList = function( req, res ){
 		
 			var listidstr = listid.join("-");
 		
-			var query = config.neo4j.server+"/biodb/parent/common/tax/"+listidstr;
+			var query = config.neo4j.server+config.neo4j.extpath+"/common/tax/"+listidstr;
 		
 			request( functions.getRequest( query ), function (error, response, body) {
 				if (!error && response.statusCode === 200) {
@@ -155,7 +155,7 @@ exports.getRankAll = function( req, res ){
 	var taxid = req.params.id;
 	var outcome = {};
 
-	var query = config.neo4j.server+"/biodb/parent/path/tax/"+taxid+"/1";
+	var query = config.neo4j.server+config.neo4j.extpath+"/path/tax/"+taxid+"/1";
 
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -186,7 +186,7 @@ exports.getRank = function( req, res ){
 	var taxid = req.params.id;
 	var rank = req.params.rank;
 	
-	var query = config.neo4j.server+"/biodb/parent/path/tax/"+taxid+"/1";
+	var query = config.neo4j.server+config.neo4j.extpath+"/path/tax/"+taxid+"/1";
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			
