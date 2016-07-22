@@ -102,7 +102,7 @@ exports.getCommonListUniProt = function( req, res ){
 
 	mysqlqueries.getPool( config, function( pool ) {
 
-		mysqlqueries.getUniProt( pool, listitem, res, function( mapping ) {
+		mysqlqueries.getUniProt( pool, listarray, res, function( mapping ) {
 			console.log( mapping );
 			functions.returnJSON( res, mapping );
 		});
