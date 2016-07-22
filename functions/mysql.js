@@ -47,7 +47,7 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 							rcb();
 						}, function ( err ) {
 							for ( var i = 0; i < listitem.length + 1; i ++ ) {
-								mapping[ listitem[ i ] ] = resultArr[ i ];
+								mapping[ listitem[ i ] ] = resultArr[ i ]["uniprot"];
 							}
 							callback( mapping );
 							connection.release();
@@ -61,7 +61,7 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 		}
 	});
 
-});
+};
 
 exports.getTaxID = function( pool, listitem, listID, res, callback ) {
 	

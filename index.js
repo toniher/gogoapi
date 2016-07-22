@@ -72,11 +72,8 @@ app.get( basepath+'/go/:id', go.getId );
 // Get common between list of ID
 app.get( basepath+'/go/common/:list', go.getCommon );
 
-// Get common between list of protein IDs and then common GO
-app.get( basepath+'/go/commonlist/:list', go.getCommonList );
-
-// TEMPORARY. Get common between list of protein IDs and then common GO
-app.get( basepath+'/go/commonlist2/:list', go.getCommonListUniProt );
+// TEMPORARY not working. Get common between list of protein IDs and then common GO
+app.get( basepath+'/go/commonlist/:list', go.getCommonListUniProt );
 
 // Lists GO elements of associated protein
 app.get( basepath+'/go/list/:id',  go.getList );

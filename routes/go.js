@@ -82,7 +82,7 @@ exports.getList = function( req, res ){
 	});
 };
 
-exports.getCommonListUniprot = function( req, res ){
+exports.getCommonListUniProt = function( req, res ){
 
 	var config = req.app.set('config');
 	
