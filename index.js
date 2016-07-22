@@ -92,7 +92,7 @@ app.get( /\/species\/(.+)/, taxon.getSpecies );
 app.get( basepath+'/taxon/common/:list', taxon.getCommon );
 
 // Get common between list of protein IDs and then common organism
-app.get( basepath+'/taxon/commonlist/:list', taxon.getCommonList );
+app.get( basepath+'/taxon/commonlist/:list', taxon.getCommonListUniProt );
 
 // Lists taxon of associated protein
 app.get( basepath+'/taxon/list/:id', taxon.getList );
