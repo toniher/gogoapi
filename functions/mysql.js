@@ -9,12 +9,59 @@ exports.getPool = function( config, callback ) {
 		host     : config.mysql.host,
 		user     : config.mysql.user,
 		password : config.mysql.password,
-		database : config.mysql.database
+		database : config.mysql.database,
+		multipleStatements: true
 	});
 
 	callback( pool );
 
 };
+
+exports.getUniProt = function( pool, listitem, res, callback ) {
+
+	var mapping = {};
+
+	pool.getConnection(function(err, connection) {
+
+		if ( ! err ) {
+			
+			var queryArr = [];
+			var resultArr = [];
+			async.each( listitem, function( item, cb ) {
+
+				queryArr.push( 'select uniprot from idmapping where uniprot = '+ connection.escape(item)+' or external = '+ connection.escape(item)+ ' limit 1' );
+				cb();
+			}, function( err ) {
+				connection.query( queryArr.join(";"), function(err, results) {
+					if ( err ) {
+						functions.sendError( connection, res, err );
+						connection.release();
+					}
+					else {
+						async.each( results, function( result, rcb ) {
+							if ( result.length > 0 ) {
+								resultArr.push( result[0]);
+							} else {
+								resultArr.push( null );
+							}
+							rcb();
+						}, function ( err ) {
+							for ( var i = 0; i < listitem.length + 1; i ++ ) {
+								mapping[ listitem[ i ] ] = resultArr[ i ];
+							}
+							callback( mapping );
+							connection.release();
+						});
+					}
+				});
+			});
+
+		} else {
+			functions.sendError( res, err );
+		}
+	});
+
+});
 
 exports.getTaxID = function( pool, listitem, listID, res, callback ) {
 	
@@ -31,7 +78,7 @@ exports.getTaxID = function( pool, listitem, listID, res, callback ) {
 						var sql2 = 'SELECT distinct(a.TAXON) from goataxon a, idmapping i where a.`UniProtKB-AC` = i.`UniProtKB-AC` and i.ID=' + connection.escape(listitem);
 						connection.query( sql2, function(err, rows) {
 
-							if ( err) {
+							if ( err ) {
 								functions.sendError( connection, res, err );
 								connection.release();
 							} else {

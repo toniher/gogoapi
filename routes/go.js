@@ -82,6 +82,33 @@ exports.getList = function( req, res ){
 	});
 };
 
+exports.getCommonListUniprot = function( req, res ){
+
+	var config = req.app.set('config');
+	
+	var list = req.params.list;
+
+	var listarray = list.split("-");
+
+	// we store list GO here
+	var listGO = {
+		"molecular_function": [],
+		"biological_process": [],
+		"cellular_component": []
+	};
+
+	// We store descriptions here
+	var listdesc = {};
+
+	mysqlqueries.getPool( config, function( pool ) {
+
+		mysqlqueries.getUniProt( pool, listitem, res, function( mapping ) {
+			console.log( mapping );
+			functions.returnJSON( res, mapping );
+		});
+	});
+
+};
 
 exports.getCommonList = function( req, res ){
 
