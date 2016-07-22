@@ -38,7 +38,7 @@ exports.getCommon = function( req, res ){
 	
 	var config = req.app.set('config');
 	
-	var query = config.neo4j.server+"/biodb/parent/common/go/"+list;
+	var query = config.neo4j.server+config.neo4j.extpath+"/common/go/"+list;
 
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -241,7 +241,7 @@ function getCommonGO( config, listGO, array, typego, callback ) {
 	
 	var server = config.neo4j.server;
 
-	var query = server+"/biodb/parent/common/go/"+listGO.join("-");
+	var query = server+config.neo4j.extpath+"/common/go/"+listGO.join("-");
 	
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode === 200) {

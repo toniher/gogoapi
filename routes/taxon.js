@@ -59,7 +59,7 @@ exports.getCommon = function( req, res ){
 	var list = req.params.list;
 	var config = req.app.set('config');
 	
-	var query = config.neo4j.server+config.neo4j.extpath+"/parent/common/tax/"+list;
+	var query = config.neo4j.server+config.neo4j.extpath+"/common/tax/"+list;
 
 	request( functions.getRequest( query ), function (error, response, body) {
 		if (!error && response.statusCode === 200) {
