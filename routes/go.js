@@ -73,9 +73,12 @@ exports.getList = function( req, res ){
 	// We store descriptions here
 	var listdesc = {};
 
-	mysqlqueries.getGO( mysqlqueries.getPool( config ), listitem, listGO, listdesc, res, function() {
+	mysqlqueries.getPool( config ), function( pool ) {
 
-		functions.returnJSON( res, {"acc":listitem, "list":listGO} );
+		mysqlqueries.getGO( pool , listitem, listGO, listdesc, res, function() {
+	
+			functions.returnJSON( res, {"acc":listitem, "list":listGO} );
+		});
 	});
 };
 
@@ -99,8 +102,11 @@ exports.getCommonList = function( req, res ){
 	var listdesc = {};
 
 	async.each( listarray, function( listitem, callback ) {
-		// TODO: MySQL queries
-		mysqlqueries.getGO( mysqlqueries.getPool( config ), listitem, listGO, listdesc, res, callback );
+
+		mysqlqueries.getPool( config ), function( pool ) {
+
+			mysqlqueries.getGO( pool, listitem, listGO, listdesc, res, callback );
+		});
 
 	}, function( err ) {
 		

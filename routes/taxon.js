@@ -88,7 +88,10 @@ exports.getCommonList = function( req, res ){
 	var listid = [];
 
 	async.each( listarray, function( listitem, callback ) {
-		mysqlqueries.getTaxID( mysqlqueries.getPool( config ), listitem, listid, res, callback );
+
+		mysqlqueries.getPool( config ), function( pool ) {
+			mysqlqueries.getTaxID( pool, listitem, listid, res, callback );
+		});
 
 	}, function( err ) {
 
@@ -129,20 +132,23 @@ exports.getList = function(req, res) {
 	var acc = req.params.id;
 
 	var listID = [];
-	mysqlqueries.getTaxID( mysqlqueries.getPool( config ), acc, listID, res, function() {
 
-		if ( listID.length === 0 ) {
-			// There can be cases such as deleted entries!
-			// Check http://www.uniprot.org/uniprot/B4RX92?version=*
-			functions.returnJSON( res, { "msg": "No results!", "acc":acc });
-		} else {
-			getInfo( config.neo4j.server, listID[0], function( data ) {
-				// We put original accession and let's have fun
-				functions.addProp( data, "acc", acc, function( output ) {
-					functions.returnJSON( res, output );
+	mysqlqueries.getPool( config ), function( pool ) {
+		mysqlqueries.getTaxID( pool, acc, listID, res, function() {
+	
+			if ( listID.length === 0 ) {
+				// There can be cases such as deleted entries!
+				// Check http://www.uniprot.org/uniprot/B4RX92?version=*
+				functions.returnJSON( res, { "msg": "No results!", "acc":acc });
+			} else {
+				getInfo( config.neo4j.server, listID[0], function( data ) {
+					// We put original accession and let's have fun
+					functions.addProp( data, "acc", acc, function( output ) {
+						functions.returnJSON( res, output );
+					});
 				});
-			});
-		}
+			}
+		});
 	});
 
 };
