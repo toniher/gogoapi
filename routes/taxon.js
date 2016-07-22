@@ -89,8 +89,8 @@ exports.getCommonList = function( req, res ){
 
 	async.each( listarray, function( listitem, callback ) {
 
-		mysqlqueries.getPool( config ), function( pool ) {
-			mysqlqueries.getTaxID( pool, listitem, listid, res, callback );
+		mysqlqueries.getPool( config, function( pool ) {
+			mysqlqueries.getTaxID( POOL, listitem, listid, res, callback );
 		});
 
 	}, function( err ) {
@@ -132,8 +132,7 @@ exports.getList = function(req, res) {
 	var acc = req.params.id;
 
 	var listID = [];
-
-	mysqlqueries.getPool( config ), function( pool ) {
+	mysqlqueries.getPool( config, function( pool ) {
 		mysqlqueries.getTaxID( pool, acc, listID, res, function() {
 	
 			if ( listID.length === 0 ) {
