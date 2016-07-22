@@ -47,7 +47,9 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 							rcb();
 						}, function ( err ) {
 							for ( var i = 0; i < listitem.length + 1; i ++ ) {
-								mapping[ listitem[ i ] ] = resultArr[ i ]["uniprot"];
+								if ( resultArr[ i ] && resultArr[ i ].hasOwnProperty("uniprot") ) {
+									mapping[ listitem[ i ] ] = resultArr[ i ]["uniprot"];
+								}
 							}
 							callback( mapping );
 							connection.release();
