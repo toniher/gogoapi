@@ -72,11 +72,8 @@ app.get( basepath+'/go/:id', go.getId );
 // Get common between list of ID
 app.get( basepath+'/go/common/:list', go.getCommon );
 
-// TEMPORARY not working. Get common between list of protein IDs and then common GO
-app.get( basepath+'/go/commonlist/:list', go.getCommonListUniProt );
-
-// Lists GO elements of associated protein
-app.get( basepath+'/go/list/:id',  go.getList );
+// Lists GO elements of associated to one or several proteins
+app.get( basepath+'/go/list/:id/:common',  go.getListUniProt );
 
 
 // Taxonomy
@@ -91,11 +88,9 @@ app.get( /\/species\/(.+)/, taxon.getSpecies );
 // Get common between list of ID
 app.get( basepath+'/taxon/common/:list', taxon.getCommon );
 
-// Get common between list of protein IDs and then common organism
-app.get( basepath+'/taxon/commonlist/:list', taxon.getCommonListUniProt );
+// Lists taxon of associated to one or several proteins
+app.get( basepath+'/taxon/list/:id/:common', taxon.getListUniProt );
 
-// Lists taxon of associated protein
-app.get( basepath+'/taxon/list/:id', taxon.getList );
 
 // Get Rank information
 app.get( basepath+'/taxon/:id/rank', taxon.getRankAll );

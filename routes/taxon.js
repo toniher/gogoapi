@@ -77,7 +77,7 @@ exports.getCommon = function( req, res ){
 	});
 };
 
-exports.getCommonListUniProt = function( req, res ){
+exports.getListUniProt = function( req, res ){
 
 	var config = req.app.set('config');
 	
@@ -117,80 +117,53 @@ exports.getCommonListUniProt = function( req, res ){
 
 };
 
-exports.getCommonList = function( req, res ){
-
-	var config = req.app.set('config');
-
-	var list = req.params.list;
-
-	var listarray = list.split("-");
-
-	var listid = [];
-
-	async.each( listarray, function( listitem, callback ) {
-
-		mysqlqueries.getPool( config, function( pool ) {
-			mysqlqueries.getTaxID( pool, listitem, listid, res, callback );
-		});
-
-	}, function( err ) {
-
-		// We generate list of ID to send
-		if ( listid.length > 0 ) {
-		
-			var listidstr = listid.join("-");
-		
-			var query = config.neo4j.server+config.neo4j.extpath+"/common/tax/"+listidstr;
-		
-			request( functions.getRequest( query ), function (error, response, body) {
-				if (!error && response.statusCode === 200) {
-					
-					var jsonResult = JSON.parse( body );
-					functions.returnJSON( res, jsonResult);
-				} else {
-		
-					var outcome = {};
-					outcome.status = "Error";
-					outcome.text =  error;
-					functions.returnJSON( res, outcome);
-		
-				}
-			});
-		} else {
-
-					var outcome = {};
-					outcome.msg = "No results!";
-					functions.returnJSON( res, outcome);
-		}
-	});
-};
-
-
-exports.getList = function(req, res) {
-
-	var config = req.app.set('config');
-	var acc = req.params.id;
-
-	var listID = [];
-	mysqlqueries.getPool( config, function( pool ) {
-		mysqlqueries.getTaxID( pool, acc, listID, res, function() {
-	
-			if ( listID.length === 0 ) {
-				// There can be cases such as deleted entries!
-				// Check http://www.uniprot.org/uniprot/B4RX92?version=*
-				functions.returnJSON( res, { "msg": "No results!", "acc":acc });
-			} else {
-				getInfo( config.neo4j.server, listID[0], function( data ) {
-					// We put original accession and let's have fun
-					functions.addProp( data, "acc", acc, function( output ) {
-						functions.returnJSON( res, output );
-					});
-				});
-			}
-		});
-	});
-
-};
+//exports.getCommonList = function( req, res ){
+//
+//	var config = req.app.set('config');
+//
+//	var list = req.params.list;
+//
+//	var listarray = list.split("-");
+//
+//	var listid = [];
+//
+//	async.each( listarray, function( listitem, callback ) {
+//
+//		mysqlqueries.getPool( config, function( pool ) {
+//			mysqlqueries.getTaxID( pool, listitem, listid, res, callback );
+//		});
+//
+//	}, function( err ) {
+//
+//		// We generate list of ID to send
+//		if ( listid.length > 0 ) {
+//		
+//			var listidstr = listid.join("-");
+//		
+//			var query = config.neo4j.server+config.neo4j.extpath+"/common/tax/"+listidstr;
+//		
+//			request( functions.getRequest( query ), function (error, response, body) {
+//				if (!error && response.statusCode === 200) {
+//					
+//					var jsonResult = JSON.parse( body );
+//					functions.returnJSON( res, jsonResult);
+//				} else {
+//		
+//					var outcome = {};
+//					outcome.status = "Error";
+//					outcome.text =  error;
+//					functions.returnJSON( res, outcome);
+//		
+//				}
+//			});
+//		} else {
+//
+//					var outcome = {};
+//					outcome.msg = "No results!";
+//					functions.returnJSON( res, outcome);
+//		}
+//	});
+//};
 
 
 // Return true if in group
