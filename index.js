@@ -73,9 +73,9 @@ app.get( basepath+'/go/:id', go.getId );
 app.get( basepath+'/go/common/:list', go.getCommon );
 
 // Lists GO elements of associated to one or several proteins
-app.get( basepath+'/go/list/:id',  go.getListUniProt );
-app.get( basepath+'/go/list/:id/:common',  go.getListUniProt );
-app.get( basepath+'/go/list/:id/:common/:format',  go.getListUniProt );
+app.get( basepath+'/go/list/:list',  go.getListUniProt );
+app.get( basepath+'/go/list/:list/:common',  go.getListUniProt );
+app.get( basepath+'/go/list/:list/:common/:format',  go.getListUniProt );
 
 
 // Taxonomy
@@ -91,9 +91,9 @@ app.get( /\/species\/(.+)/, taxon.getSpecies );
 app.get( basepath+'/taxon/common/:list', taxon.getCommon );
 
 // Lists taxon of associated to one or several proteins
-app.get( basepath+'/taxon/list/:id', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:id/:common', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:id/:common/:format', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:common', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:common/:format', taxon.getListUniProt );
 
 
 // Get Rank information
