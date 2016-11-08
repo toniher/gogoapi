@@ -12,21 +12,22 @@
     "api"
   ],
   "dependencies": {
-    "express": "4.x",
+    "async": "1.x",
     "body-parser": "1.x",
     "compression": "1.x",
+    "cors": "^2.8.1",
     "errorhandler": "1.x",
+    "express": "4.x",
     "mysql": "2.x",
-    "request": "2.x",
-    "async": "1.x",
-    "xml2js": "0.4.x",
     "nconf": "0.8.x",
-    "neo4j": "2.0.0-RC2"
+    "neo4j": "2.0.0-RC2",
+    "request": "2.x",
+    "xml2js": "0.4.x"
   },
   "author": "Toni Hermoso",
   "license": "GPL-3.0",
   "repository": {
-     "type": "git",
-     "url": "https://github.com/toniher/gogoapi"
+    "type": "git",
+    "url": "https://github.com/toniher/gogoapi"
   }
 }

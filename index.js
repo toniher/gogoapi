@@ -8,6 +8,7 @@ var config = nconfig.get("express");
 var errorhandler = require("errorhandler");
 var bodyParser = require('body-parser');
 var compression = require('compression');
+var cors = require('cors');
 
 var app = express();
 
@@ -17,8 +18,26 @@ if (config.basepath) {
 	basepath = config.basepath;
 }
 
+// Enable JSONP
 if ( config.jsonp ) {
 	app.set("jsonp callback", true);
+}
+
+// Enable CORS
+if ( config.cors ) {
+	
+	var corsOptions = {};
+	
+	if ( config['cors-whitelist'] && config['cors-whitelist'].length > 0 ) {
+		corsOptions = {
+		  origin: function(origin, callback){
+			var originIsWhitelisted = config['cors-whitelist'].indexOf(origin) !== -1;
+			callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+		  }
+		};
+	}
+	
+	app.use( cors( corsOptions ) );
 }
 
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -20,6 +20,8 @@
 		"port": 4242,
 		"basepath": "/api",
 		"jsonp": true,
+		"cors": true,
+		"cors-whitelist": [],
 		"rootGO": {
 			"biological_process": "GO:0008150",
 			"cellular_component": "GO:0005575",

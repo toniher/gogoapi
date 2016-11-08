@@ -54,6 +54,21 @@ exports.getSpecies = function( req, res ) {
 	});
 };
 
+//exports.getSpeciesMySQL = function( req, res ) {
+//
+//	var config = req.app.set('config');
+//	
+//	// We get species with names with '/' -> tricky
+//	var name = req.params[0];
+//
+//	// Hack for slash
+//	name = name.replace("&47;","/");
+//
+//	getSpecies( config.neo4j.server, name, function( data ) {
+//		functions.returnJSON( res, data);
+//	});
+//};
+
 exports.getCommon = function( req, res ){
 
 	var list = req.params.list;

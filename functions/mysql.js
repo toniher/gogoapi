@@ -69,5 +69,57 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 
 };
 
+exports.getTaxonomy = function( pool, listitem, res, callback ) {
+
+	var mapping = {};
+
+	pool.getConnection(function(err, connection) {
+
+		if ( ! err ) {
+			
+			var queryArr = [];
+			var resultArr = [];
+			async.each( listitem, function( item, cb ) {
+
+				queryArr.push( 'select tax_id from ncbi_names where name_txt = '+ connection.escape(item)+' limit 1' );
+				cb();
+			}, function( err ) {
+				connection.query( queryArr.join(";"), function(err, results) {
+					if ( err ) {
+						functions.sendError( connection, res, err );
+						connection.release();
+					}
+					else {
+						async.each( results, function( result, rcb ) {
+							if ( result.length > 0 ) {
+								resultArr.push( result[0]);
+							} else {
+								if ( result ) {
+										resultArr.push( result );
+								} else {
+										resultArr.push( null );
+								}
+							}
+							rcb();
+						}, function ( err ) {
+							for ( var i = 0; i < listitem.length; i ++ ) {
+								if ( resultArr[ i ] && resultArr[ i ].hasOwnProperty("tax_id") ) {
+									mapping[ listitem[ i ] ] = resultArr[ i ]["tax_id"];
+								}
+							}
+							callback( mapping );
+							connection.release();
+						});
+					}
+				});
+			});
+
+		} else {
+			functions.sendError( res, err );
+		}
+	});
+
+};
+
 
 
