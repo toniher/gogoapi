@@ -64,7 +64,7 @@ exports.getSpeciesMySQL = function( req, res ) {
 	// Hack for slash
 	name = name.replace("&47;","/");
 
-	getSpeciesMySQL( config.mysql.server, name, function( data ) {
+	getSpeciesMySQL( config, name, function( data ) {
 		functions.returnJSON( res, data );
 	});
 };
@@ -367,7 +367,7 @@ function getSpecies( server, name, callback ) {
 }
 
 // Finish callback here
-function getSpeciesMySQL( server, name, callback ) {
+function getSpeciesMySQL( config, name, callback ) {
 
 	// We should furter process params.
 	var nextname = name.toLowerCase();
