@@ -74,7 +74,7 @@ app.get( basepath, function (req, res) {
 		[ "/taxon/list/P08819", "retrieves all associated taxonomy info of a protein" ],
 		[ "/taxon/commonlist/P08819-P15169", "retrieves all common clade between two or more proteins" ],
 		[ "/taxon/entrez/protein/21224458", "retrieves taxon information about entry via NCBI Entrez" ],
-		[ "/taxon/entrezxml/nuccore/3282736", "retrieves taxon information about entry via NCBI Entrez - Using XML" ],
+		[ "/taxon/entrez/nuccore/3282736", "retrieves taxon information about entry via NCBI Entrez" ],
 		[ "/go/GO:0005615", "retrieves info about GO entry" ],
 		[ "/go/common/GO:0005615-GO:0005576", "retrieves ancestor between two GO entries" ],
 		[ "/go/list/P08819", "retrieves all associated GO annotations of a protein" ],
@@ -102,30 +102,28 @@ app.get( basepath+'/go/list/:list/:common/:format',  go.getListUniProt );
 // Look for TaxonID
 app.get( basepath+'/taxon/:id', taxon.getId);
 
-// Look for Taxon name in Neo4j
-app.get( /\/species\/(.+)/, taxon.getSpeciesMySQL );
-
-
-// Get common between list of ID
-app.get( basepath+'/taxon/common/:list', taxon.getCommon );
-
-// Lists taxon of associated to one or several proteins
-app.get( basepath+'/taxon/list/:list', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:list/:common', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:list/:common/:format', taxon.getListUniProt );
-
-
 // Get Rank information
 app.get( basepath+'/taxon/:id/rank', taxon.getRankAll );
 app.get( basepath+'/taxon/:id/rank/:rank', taxon.getRank );
 
+// Look for Taxon name in Neo4j
+app.get( /\/species\/(.+)/, taxon.getSpeciesMySQL );
+
+// Get common between list of ID
+app.get( basepath+'/taxon/common/:list', taxon.getCommon );
+
+/** PENDING **/
+// Lists taxon of associated to one or several proteins
+app.get( basepath+'/taxon/list/:list', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:common', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:common/:format', taxon.getListUniProt );
+/** PENDING END **/
+
+
 // Entrez interface
 
-// Lists taxon of associated protein
+// Lists taxon of associated entry
 app.get( basepath+'/taxon/entrez/:db/:id', entrez.getTaxonId );
-
-// Lists taxon of associated protein
-app.get( basepath+'/taxon/entrezxml/:db/:id', entrez.getTaxonIdXML );
 
 
 // Launch server

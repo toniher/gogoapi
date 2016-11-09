@@ -21,8 +21,7 @@
     "mysql": "2.x",
     "nconf": "0.8.x",
     "neo4j": "2.0.0-RC2",
-    "request": "2.x",
-    "xml2js": "0.4.x"
+    "request": "2.x"
   },
   "author": "Toni Hermoso",
   "license": "GPL-3.0",
