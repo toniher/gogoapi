@@ -384,10 +384,41 @@ function getSpeciesMySQL( config, name, res, callback ) {
 	mysqlqueries.getPool( config, function( pool ) {
 
 		mysqlqueries.getTaxonomy( pool, listarray, res, function( mapping ) {
-			callback( mapping );
+
+			var ids = [];
+			for ( var key in mapping ) {
+				if ( mapping.hasOwnProperty(key) ) {
+					if (ids.indexOf( mapping[key] ) === -1) {
+						ids.push( mapping[key] );
+					}
+				}
+			}
+
+			var outcome = [];
+
+			async.each( ids, function( id, cb ) {
+				if ( id ) {
+					// Get ID from Neo4j
+					neo4j.getInfobyField( config.neo4j.server, "TAXID", { id: id }, function ( error, data ) {
+						if (!error ) {
+					
+							for ( var i = 0; i < data.length; i++ ) {
+								if ( data[i] ) {
+									outcome.push( data[i] );
+								}
+							}
+							cb();
+						}
+					});
+				}
+			},
+			function( err ) {
+				if (err) return next(err);
+				callback( outcome );
+				return true;
+			});
 
 		});
-
 
 	});
 	
