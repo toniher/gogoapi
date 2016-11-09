@@ -287,86 +287,86 @@ function getInfo( server, taxid, callback ) {
 
 
 // Finish callback here
-function getSpecies( server, name, callback ) {
+//function getSpecies( server, name, callback ) {
+//
+//	// We should furter process params.
+//	var nextname = name.toLowerCase();
+//	if ( name === nextname ) {
+//		nextname = functions.capitaliseFirstLetter( name );
+//	} else {
+//		// Let's try everything lowercase
+//		nextname = name.toLowerCase();
+//	}
+//
+//	// Possible names -> String dealt
+//	var strname = "\""+name+"\"";
+//	var strnextname = "\""+nextname+"\"";
+//
+//	var names = { "name": [ strname, strnextname ] };
+//	
+//	// First scientific names
+//	neo4j.getInfobyField( server, "TAXID", { scientific_name: name }, function ( error, data ) {
+//				
+//		if (!error ) {
+//
+//			var outcome = [];
+//			
+//			if ( data.length === 0 ) {
+//				
+//				// Then the rest
+//				neo4j.getInfobyFieldArray( server, "TAXID", names, function ( error, data2 ) {
+//				
+//					if (!error ) {
+//						
+//						var outcome = [];
+//
+//						async.each( data2, function( aResult, callback2 ) {
+//							if ( aResult ) {
+//								outcome.push( aResult );
+//								callback2();
+//							}
+//						},
+//						function( err ) {
+//							if (err) return next(err);
+//							callback( outcome );
+//							return true;
+//						});
+//						
+//					} else {
+//						
+//						var outcome = {};
+//						outcome.status = "Error";
+//						outcome.text =  error;
+//			
+//						callback( outcome );
+//					}
+//				
+//				});
+//
+//			} else {
+//				
+//				
+//				for ( var i = 0; i < data.length; i++ ) {
+//					if ( data[i] ) {
+//						outcome.push( data[i] );
+//					}
+//				}
+//				callback( outcome );
+//			}
+//		
+//		} else {
+//			
+//			var outcome = {};
+//			outcome.status = "Error";
+//			outcome.text =  error;
+//			
+//			callback( outcome );
+//		}
+//	});
+//	
+//}
 
-	// We should furter process params.
-	var nextname = name.toLowerCase();
-	if ( name === nextname ) {
-		nextname = functions.capitaliseFirstLetter( name );
-	} else {
-		// Let's try everything lowercase
-		nextname = name.toLowerCase();
-	}
-
-	// Possible names -> String dealt
-	var strname = "\""+name+"\"";
-	var strnextname = "\""+nextname+"\"";
-
-	var names = { "name": [ strname, strnextname ] };
-	
-	// First scientific names
-	neo4j.getInfobyField( server, "TAXID", { scientific_name: name }, function ( error, data ) {
-				
-		if (!error ) {
-
-			var outcome = [];
-			
-			if ( data.length === 0 ) {
-				
-				// Then the rest
-				neo4j.getInfobyFieldArray( server, "TAXID", names, function ( error, data2 ) {
-				
-					if (!error ) {
-						
-						var outcome = [];
-
-						async.each( data2, function( aResult, callback2 ) {
-							if ( aResult ) {
-								outcome.push( aResult );
-								callback2();
-							}
-						},
-						function( err ) {
-							if (err) return next(err);
-							callback( outcome );
-							return true;
-						});
-						
-					} else {
-						
-						var outcome = {};
-						outcome.status = "Error";
-						outcome.text =  error;
-			
-						callback( outcome );
-					}
-				
-				});
-
-			} else {
-				
-				
-				for ( var i = 0; i < data.length; i++ ) {
-					if ( data[i] ) {
-						outcome.push( data[i] );
-					}
-				}
-				callback( outcome );
-			}
-		
-		} else {
-			
-			var outcome = {};
-			outcome.status = "Error";
-			outcome.text =  error;
-			
-			callback( outcome );
-		}
-	});
-	
-}
-
-// Finish callback here
+// Handle via MySQL and Neo4j
 function getSpeciesMySQL( config, name, res, callback ) {
 
 	// We should furter process params.
