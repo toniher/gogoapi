@@ -54,20 +54,20 @@ exports.getSpecies = function( req, res ) {
 	});
 };
 
-//exports.getSpeciesMySQL = function( req, res ) {
-//
-//	var config = req.app.set('config');
-//	
-//	// We get species with names with '/' -> tricky
-//	var name = req.params[0];
-//
-//	// Hack for slash
-//	name = name.replace("&47;","/");
-//
-//	getSpecies( config.neo4j.server, name, function( data ) {
-//		functions.returnJSON( res, data);
-//	});
-//};
+exports.getSpeciesMySQL = function( req, res ) {
+
+	var config = req.app.set('config');
+	
+	// We get species with names with '/' -> tricky
+	var name = req.params[0];
+
+	// Hack for slash
+	name = name.replace("&47;","/");
+
+	getSpeciesMySQL( config.mysql.server, name, function( data ) {
+		functions.returnJSON( res, data );
+	});
+};
 
 exports.getCommon = function( req, res ){
 
@@ -365,6 +365,34 @@ function getSpecies( server, name, callback ) {
 	});
 	
 }
+
+// Finish callback here
+function getSpeciesMySQL( server, name, callback ) {
+
+	// We should furter process params.
+	var nextname = name.toLowerCase();
+	if ( name === nextname ) {
+		nextname = functions.capitaliseFirstLetter( name );
+	} else {
+		// Let's try everything lowercase
+		nextname = name.toLowerCase();
+	}
+
+	var listarray = [ name, nextname ];
+	
+
+	mysqlqueries.getPool( config, function( pool ) {
+
+		mysqlqueries.getTaxonomy( pool, listarray, res, function( mapping ) {
+			callback( mapping );
+
+		});
+
+
+	});
+	
+}
+
 
 function findRank ( outcome, rank, callback ) {
 

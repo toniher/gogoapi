@@ -104,6 +104,7 @@ app.get( basepath+'/taxon/:id', taxon.getId);
 
 // Look for Taxon name in Neo4j
 app.get( /\/species\/(.+)/, taxon.getSpecies );
+app.get( /\/species2\/(.+)/, taxon.getSpeciesMySQL );
 
 
 // Get common between list of ID
