@@ -72,13 +72,13 @@ app.get( basepath, function (req, res) {
 		[ "/taxon/9606/rank/family", "retrieves the value of the associated taxonomic rank." ],
 		[ "/taxon/common/9606-10090", "retrieves common clade between two organisms ID" ],
 		[ "/taxon/list/P08819", "retrieves all associated taxonomy info of a protein" ],
-		[ "/taxon/commonlist/P08819-P15169", "retrieves all common clade between two or more proteins" ],
+		[ "/taxon/list/P08819-P15169/common", "retrieves all common clade between two or more proteins" ],
 		[ "/taxon/entrez/protein/21224458", "retrieves taxon information about entry via NCBI Entrez" ],
 		[ "/taxon/entrez/nuccore/3282736", "retrieves taxon information about entry via NCBI Entrez" ],
 		[ "/go/GO:0005615", "retrieves info about GO entry" ],
 		[ "/go/common/GO:0005615-GO:0005576", "retrieves ancestor between two GO entries" ],
 		[ "/go/list/P08819", "retrieves all associated GO annotations of a protein" ],
-		[ "/go/commonlist/P08819-P15169", "retrieves all common GO information between two proteins" ],
+		[ "/go/list/P08819-P15169/common", "retrieves all common GO information between two proteins" ],
 	];
 
 	functions.returnJSON( res, help);
