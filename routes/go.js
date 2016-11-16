@@ -65,12 +65,10 @@ exports.getListUniProt = function( req, res ){
 
 	var listarray = list.split("-");
 
-	// we store list GO here
-	var listGO = {
-		"molecular_function": [],
-		"biological_process": [],
-		"cellular_component": []
-	};
+	var method = "all";
+	if ( req.params.method ) {
+		method = req.params.method;
+	}
 
 	// We store descriptions here
 	var listdesc = {};
@@ -83,7 +81,7 @@ exports.getListUniProt = function( req, res ){
 
 			if ( values.length > 0 ) {
 
-				var query = config.neo4j.server+config.neo4j.extpath+"/rels/go/"+values.join("-");
+				var query = config.neo4j.server+config.neo4j.extpath+"/rels/go/"+values.join("-")+"/"+method;
 			
 				request( functions.getRequest( query ), function (error, response, body) {
 					if (!error && response.statusCode === 200) {

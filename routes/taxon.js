@@ -100,6 +100,11 @@ exports.getListUniProt = function( req, res ){
 
 	var listarray = list.split("-");
 
+	var method = "all";
+	if ( req.params.method ) {
+		method = req.params.method;
+	}
+
 	mysqlqueries.getPool( config, function( pool ) {
 
 		mysqlqueries.getUniProt( pool, listarray, res, function( mapping ) {
@@ -108,7 +113,7 @@ exports.getListUniProt = function( req, res ){
 
 			if ( values.length > 0 ) {
 
-				var query = config.neo4j.server+config.neo4j.extpath+"/rels/tax/"+values.join("-");
+				var query = config.neo4j.server+config.neo4j.extpath+"/rels/tax/"+values.join("-")+"/"+method;
 			
 				request( functions.getRequest( query ), function (error, response, body) {
 					if (!error && response.statusCode === 200) {

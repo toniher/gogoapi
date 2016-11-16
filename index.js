@@ -93,8 +93,8 @@ app.get( basepath+'/go/common/:list', go.getCommon );
 
 // Lists GO elements of associated to one or several proteins
 app.get( basepath+'/go/list/:list',  go.getListUniProt );
-app.get( basepath+'/go/list/:list/:common',  go.getListUniProt );
-app.get( basepath+'/go/list/:list/:common/:format',  go.getListUniProt );
+app.get( basepath+'/go/list/:list/:method',  go.getListUniProt );
+app.get( basepath+'/go/list/:list/:method/:format',  go.getListUniProt );
 
 
 // Taxonomy
@@ -115,8 +115,8 @@ app.get( basepath+'/taxon/common/:list', taxon.getCommon );
 /** PENDING **/
 // Lists taxon of associated to one or several proteins
 app.get( basepath+'/taxon/list/:list', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:list/:common', taxon.getListUniProt );
-app.get( basepath+'/taxon/list/:list/:common/:format', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:method', taxon.getListUniProt );
+app.get( basepath+'/taxon/list/:list/:method/:format', taxon.getListUniProt );
 /** PENDING END **/
 
 
