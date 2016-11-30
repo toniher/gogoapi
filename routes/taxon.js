@@ -26,10 +26,10 @@ exports.getId = function( req, res ) {
 		}, function( err) {
 			if ( err ) {
 			
-				var outcome = {};
-				outcome.status = "Error";
-				outcome.text =  err;
-				functions.returnJSON( res, outcome );
+				var out = {};
+				out.status = "Error";
+				out.text =  err;
+				functions.returnJSON( res, out );
 			
 			}
 			// Return array
