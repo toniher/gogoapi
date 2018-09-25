@@ -2,18 +2,25 @@ var mysqlqueries = require('./mysql.js');
 var mysql = require('mysql');
 var async = require('async');
 var functions = require('./index.js');
+var pool = false;
 
 exports.getPool = function( config, callback ) {
 
-	var pool  = mysql.createPool({
-		host     : config.mysql.host,
-		user     : config.mysql.user,
-		password : config.mysql.password,
-		database : config.mysql.database,
-		multipleStatements: true
-	});
+	if ( ! pool ) {
 
-	callback( pool );
+		pool  = mysql.createPool({
+			host     : config.mysql.host,
+			user     : config.mysql.user,
+			password : config.mysql.password,
+			database : config.mysql.database,
+			multipleStatements: true
+		});
+
+		callback( pool );
+
+	} else {
+		callback( pool );
+	}
 
 };
 
@@ -34,8 +41,8 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 			}, function( err ) {
 				connection.query( queryArr.join(";"), function(err, results) {
 					if ( err ) {
-						functions.sendError( connection, res, err );
 						connection.release();
+						functions.sendError( connection, res, err );
 					}
 					else {
 						async.each( results, function( result, rcb ) {
@@ -55,8 +62,8 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 									mapping[ listitem[ i ] ] = resultArr[ i ]["uniprot"];
 								}
 							}
-							callback( mapping );
 							connection.release();
+							callback( mapping );
 						});
 					}
 				});
@@ -86,8 +93,8 @@ exports.getTaxonomy = function( pool, listitem, res, callback ) {
 			}, function( err ) {
 				connection.query( queryArr.join(";"), function(err, results) {
 					if ( err ) {
-						functions.sendError( connection, res, err );
 						connection.release();
+						functions.sendError( connection, res, err );
 					}
 					else {
 						async.each( results, function( result, rcb ) {
@@ -107,8 +114,8 @@ exports.getTaxonomy = function( pool, listitem, res, callback ) {
 									mapping[ listitem[ i ] ] = resultArr[ i ]["tax_id"];
 								}
 							}
-							callback( mapping );
 							connection.release();
+							callback( mapping );
 						});
 					}
 				});
