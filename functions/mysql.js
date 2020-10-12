@@ -31,7 +31,7 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 	pool.getConnection(function(err, connection) {
 
 		if ( ! err ) {
-			
+
 			var queryArr = [];
 			var resultArr = [];
 			async.each( listitem, function( item, cb ) {
@@ -76,6 +76,52 @@ exports.getUniProt = function( pool, listitem, res, callback ) {
 
 };
 
+exports.getUniProtGOA = function( pool, listitem, method, res, callback ) {
+
+	var golist = {};
+
+	pool.getConnection(function(err, connection) {
+
+		if ( ! err ) {
+
+			let queryArr = [];
+
+			for ( let item of listitem ) {
+				queryArr.push( connection.escape(item) );
+			}
+
+			let queryStr = "select GO, ID from goassociation where ID in " + queryArr.join(",") + "group by GO, ID order by GO, ID";
+
+			connection.query( queryStr, function(err, results) {
+					if ( err ) {
+						connection.release();
+						functions.sendError( connection, res, err );
+					}
+					else {
+						if ( results.length > 0 ) {
+
+							// Process results
+							let procResults = processGOresults( results, method );
+							// Group results
+							golist = groupGOresults( procResults );
+
+						}
+
+						connection.release();
+						callback( golist );
+
+					}
+
+			});
+
+		} else {
+			functions.sendError( res, err );
+		}
+
+	});
+
+};
+
 exports.getTaxonomy = function( pool, listitem, res, callback ) {
 
 	var mapping = {};
@@ -83,7 +129,7 @@ exports.getTaxonomy = function( pool, listitem, res, callback ) {
 	pool.getConnection(function(err, connection) {
 
 		if ( ! err ) {
-			
+
 			var queryArr = [];
 			var resultArr = [];
 			async.each( listitem, function( item, cb ) {
@@ -128,5 +174,13 @@ exports.getTaxonomy = function( pool, listitem, res, callback ) {
 
 };
 
+function processGOresults( results ) {
 
 
+}
+
+
+function groupGOresults( results ) {
+
+
+}
