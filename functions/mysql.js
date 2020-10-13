@@ -90,7 +90,7 @@ exports.getUniProtGOA = function( pool, listitem, method, res, callback ) {
 				queryArr.push( connection.escape(item) );
 			}
 
-			let queryStr = "select GO, ID from goassociation where ID in " + queryArr.join(",") + "group by GO, ID order by GO, ID";
+			let queryStr = "select a.GO, t.name, t.term_type, t.acc, d.term_definition, a.ID from goassociation a, term t, term_definition d where t.id=d.term_id and a.GO=t.acc and a.ID in " + queryArr.join(",") + " group by a.GO, a.ID order by a.GO, a.ID";
 
 			connection.query( queryStr, function(err, results) {
 					if ( err ) {
