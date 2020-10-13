@@ -90,7 +90,7 @@ exports.getUniProtGOA = function( pool, listitem, method, res, callback ) {
 				queryArr.push( connection.escape(item) );
 			}
 
-			let queryStr = "select a.GO, t.name, t.term_type, t.acc, d.term_definition, a.ID from goassociation a, term t, term_definition d where t.id=d.term_id and a.GO=t.acc and a.ID in " + queryArr.join(",") + " group by a.GO, a.ID order by a.GO, a.ID";
+			let queryStr = "select a.GO as acc, t.id as id, t.name as name, t.term_type as term_type, d.term_definition as definition, a.ID as mol from goassociation a, term t, term_definition d where t.id=d.term_id and a.GO=t.acc and a.ID in " + queryArr.join(",") + " group by a.GO, a.ID order by a.GO, a.ID";
 
 			connection.query( queryStr, function(err, results) {
 					if ( err ) {
@@ -174,7 +174,43 @@ exports.getTaxonomy = function( pool, listitem, res, callback ) {
 
 };
 
-function processGOresults( results ) {
+function processGOresults( results, method ) {
+
+	let countGO = {};
+	let listGO = {};
+	let countMolH = {};
+	let countMol = 0;
+	let selected = [];
+
+	for ( let result of results ) {
+		let go = result.acc;
+		let mol = result.mol;
+
+		if ( countGO.hasOwnProperty(go) ) {
+			countGO[go]++;
+		} else {
+			countGO[go] = 1;
+			listGO[go] = result;
+			delete listGO[go]['mol'];
+		}
+
+		if ( ! countMolH.hasOwnProperty(mol) ) {
+			countMol++;
+			countMolH[mol] = 1;
+		}
+	}
+
+	for ( let go in listGO ) {
+
+		if ( method == "all" ) {
+
+		}
+		// Common
+		else {
+
+		}
+
+	}
 
 
 }
