@@ -203,20 +203,45 @@ function processGOresults( results, method ) {
 	for ( let go in listGO ) {
 
 		if ( method == "all" ) {
-
+			selected.push( listGO[go] );
 		}
 		// Common
+		// TODO: Other methods
 		else {
-
+			if ( countGO[go] >= countMol ) {
+				selected.push( listGO[go] );
+			}
 		}
 
 	}
 
+	return selected;
 
 }
 
 
 function groupGOresults( results ) {
 
+	// First select term_type
+	let get_types = [];
+
+	for ( let result of results ) {
+		get_types.push( result.term_type );
+	}
+
+	let term_types = [...new Set(get_types)];
+
+	let hash = {};
+	for ( let term_type of term_types ) {
+		hash[term_type] = [];
+	}
+
+	for ( let result of results ) {
+		let term_type = result.term_type;
+
+		hash[term_type].push( result );
+	}
+
+	return hash;
 
 }

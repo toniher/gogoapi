@@ -113,7 +113,7 @@ exports.getListUniProtMySQL = function( req, res ){
 
 	var listarray = list.split("-");
 
-	var method = "all";
+	var method = "common";
 	if ( req.params.method ) {
 		method = req.params.method;
 	}
