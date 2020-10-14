@@ -205,10 +205,13 @@ function processGOresults( results, method ) {
 		if ( method == "all" ) {
 			selected.push( listGO[go] );
 		}
-		// Common
-		// TODO: Other methods
-		else {
+		if ( method == "common" ) {
 			if ( countGO[go] >= countMol ) {
+				selected.push( listGO[go] );
+			}
+		}
+		else {
+			if ( countGO[go] >= Math.ceil(countMol/2) ) {
 				selected.push( listGO[go] );
 			}
 		}
