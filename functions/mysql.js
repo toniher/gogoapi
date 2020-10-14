@@ -90,12 +90,12 @@ exports.getUniProtGOA = function( pool, listitem, method, res, callback ) {
 				queryArr.push( connection.escape(item) );
 			}
 
-			let queryStr = "select a.GO as acc, t.id as id, t.name as name, t.term_type as term_type, d.term_definition as definition, a.ID as mol from goassociation a, term t, term_definition d where t.id=d.term_id and a.GO=t.acc and a.ID in " + queryArr.join(",") + " group by a.GO, a.ID order by a.GO, a.ID";
+			let queryStr = "select a.GO as acc, t.id as id, t.name as name, t.term_type as term_type, d.term_definition as definition, a.ID as mol from goassociation a, term t, term_definition d where t.id=d.term_id and a.GO=t.acc and a.ID in (" + queryArr.join(",") + ") group by a.GO, a.ID order by a.GO, a.ID";
 
 			connection.query( queryStr, function(err, results) {
 					if ( err ) {
 						connection.release();
-						functions.sendError( connection, res, err );
+						functions.sendError( res, err );
 					}
 					else {
 						if ( results.length > 0 ) {

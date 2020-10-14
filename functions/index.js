@@ -58,10 +58,10 @@ exports.sendError = function( res, err ) {
 
 	//connection.end();
 	var outcome = {};
-	
+
 	// Allowing other error msgss
 	err = typeof err !== 'undefined' ? err : "Error!";
-	
+
 	outcome.status = "Error";
 	outcome.text =  err;
 	functions.returnJSON( res, outcome );
@@ -79,13 +79,13 @@ exports.printCombination = function(arr, r, repo) {
 	// A temporary array to store all combination one by one
 	var data = new Array(r);
 	var n = arr.length;
-		
+
 	if ( n > 0) {
 		// Print all combination using temprary array 'data[]'
 		combinationUtil(arr, data, 0, n-1, 0, r, repo);
 	}
 };
- 
+
 /* arr[]  ---> Input Array
    data[] ---> Temporary array to store current combination
    start & end ---> Staring and Ending indexes in arr[]
@@ -95,7 +95,7 @@ function combinationUtil( arr, data, start, end, index, r, repo ) {
 
 	// Current combination is ready to be printed, print it
 	if (index === r) {
-		
+
 		var temp = [];
 		for (j=0; j<r; j++) {
 			temp.push( data[j] );
@@ -104,7 +104,7 @@ function combinationUtil( arr, data, start, end, index, r, repo ) {
 
 		return;
 	}
-	
+
 	// replace index with all possible elements. The condition
 	// "end-i+1 >= r-index" makes sure that including one element
 	// at index will make a combination with remaining elements
@@ -114,5 +114,3 @@ function combinationUtil( arr, data, start, end, index, r, repo ) {
 		combinationUtil(arr, data, i+1, end, index+1, r, repo);
 	}
 }
-
-

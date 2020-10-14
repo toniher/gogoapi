@@ -25,9 +25,9 @@ if ( config.jsonp ) {
 
 // Enable CORS
 if ( config.cors ) {
-	
+
 	var corsOptions = {};
-	
+
 	if ( config['cors-whitelist'] && config['cors-whitelist'].length > 0 ) {
 		corsOptions = {
 		  origin: function(origin, callback){
@@ -36,7 +36,7 @@ if ( config.cors ) {
 		  }
 		};
 	}
-	
+
 	app.use( cors( corsOptions ) );
 }
 
@@ -92,9 +92,9 @@ app.get( basepath+'/go/:id', go.getId );
 app.get( basepath+'/go/common/:list', go.getCommon );
 
 // Lists GO elements of associated to one or several proteins
-app.get( basepath+'/go/list/:list',  go.getListUniProt );
-app.get( basepath+'/go/list/:list/:method',  go.getListUniProt );
-app.get( basepath+'/go/list/:list/:method/:format',  go.getListUniProt );
+app.get( basepath+'/go/list/:list',  go.getListUniProtMySQL );
+app.get( basepath+'/go/list/:list/:method',  go.getListUniProtMySQL );
+app.get( basepath+'/go/list/:list/:method/:format',  go.getListUniProtMySQL );
 
 
 // Taxonomy
@@ -126,6 +126,7 @@ app.get( basepath+'/taxon/list/:list/:method/:format', taxon.getListUniProt );
 app.get( basepath+'/taxon/entrez/:db/:id', entrez.getTaxonId );
 
 
-// Launch server
-app.listen( config.port ); 
+console.log("Seqserver listening on port " + config.port);
 
+// Launch server
+app.listen( config.port );
