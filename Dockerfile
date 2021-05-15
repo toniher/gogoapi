@@ -1,6 +1,6 @@
 # gogoapi image
 # from node image
-FROM node:boron
+FROM node:fermium-buster
 
 MAINTAINER toniher <toniher@cau.cat>
 
