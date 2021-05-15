@@ -12,16 +12,16 @@
     "api"
   ],
   "dependencies": {
-    "async": "1.x",
-    "body-parser": "^1.19.0",
-    "compression": "^1.7.4",
-    "cors": "^2.8.5",
-    "errorhandler": "^1.5.1",
-    "express": "^4.17.1",
-    "mysql": "^2.18.1",
-    "nconf": "0.8.x",
+    "async": "3.x",
+    "body-parser": "1.x",
+    "compression": "1.x",
+    "cors": "2.x",
+    "errorhandler": "1.x",
+    "express": "4.x",
+    "mysql": "2.x",
+    "nconf": "0.x",
     "neo4j": "2.0.0-RC2",
-    "request": "^2.88.2"
+    "request": "2.x"
   },
   "author": "Toni Hermoso",
   "license": "GPL-3.0",

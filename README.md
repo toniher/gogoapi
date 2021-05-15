@@ -12,4 +12,4 @@ Express RESTFul interface for providing information about GO and Taxonomy
 * Move all Neo4j request queries to Neo4j module
 * Taxon queries:
   * Give value depending of taxonomic rank
-
+* Update Neo4j library
