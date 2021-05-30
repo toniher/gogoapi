@@ -1,15 +1,13 @@
 # GOGOApi
 
-Express RESTFul interface for providing information about GO and Taxonomy
+Express RESTFul interface for providing information about GO and Taxonomy for supporting functional annotation efforts.
+
+## Installation
+
+### Software
+
+### Datasets
 
 ## Options
 
 * Check /api for examples
-
-
-## TODO
-* Move all MySQL queries to MySQL module
-* Move all Neo4j request queries to Neo4j module
-* Taxon queries:
-  * Give value depending of taxonomic rank
-* Update Neo4j library
