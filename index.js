@@ -10,10 +10,15 @@ var bodyParser = require('body-parser');
 var compression = require('compression');
 var cors = require('cors');
 
+
+console.log( args[0] );
+console.log( nconfig );
+
 var app = express();
 
 var basepath = "";
 
+console.log( config );
 if (config.basepath) {
 	basepath = config.basepath;
 }

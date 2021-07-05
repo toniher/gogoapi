@@ -2,11 +2,10 @@
 
 Express RESTFul interface for providing information about GO and Taxonomy for supporting functional annotation efforts.
 
-## Installation
+## Installation and usage
 
-### Software
 
-### Datasets
+## Datasets
 
 * Database dumps for convenience
   * [202010](https://biocore.crg.eu/gogoapi/biosql-202010.sql.gz) (22G)
