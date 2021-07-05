@@ -1,5 +1,7 @@
 # GOGOApi
 
+[![DOI](https://zenodo.org/badge/27595679.svg)](https://zenodo.org/badge/latestdoi/27595679)
+
 Express RESTFul interface for providing information about GO and Taxonomy for supporting functional annotation efforts.
 
 ## Installation and usage
