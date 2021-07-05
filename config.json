@@ -1,10 +1,10 @@
-{	
+{
 	"express":{
 		"mysql": {
 			"host": "localhost",
 			"user": "anonymous",
 			"password": "anonymous",
-			"database": "goa"
+			"database": "biosql"
 		},
 		"neo4j": {
 			"protocol": "http",
@@ -29,4 +29,3 @@
 		}
 	}
 }
-

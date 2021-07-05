@@ -4,6 +4,15 @@ Express RESTFul interface for providing information about GO and Taxonomy for su
 
 ## Installation and usage
 
+In a local computer install node.js (you can use [Node Version Manager](https://github.com/nvm-sh/nvm)).
+
+Adapt ```config.json``` to suit your needs and point to suitable database locations.
+
+Install dependendencies with: ```npm install``` and start the application with ```node index.js /path/to/config.json```
+
+This will start a service under ```0.0.0.0:4242/api``` (if defined as such in ```basepath``` and ```port``` configuration parameters).
+
+A ```Dockerfile``` and a [generated Docker image]() is available as well. Care must be taken to adapt Docker networks so it can find pointed databases in ```config.json``` file.
 
 ## Datasets
 
@@ -12,4 +21,4 @@ Express RESTFul interface for providing information about GO and Taxonomy for su
 
 ## Options
 
-* Check /api for examples
+* Check ```0.0.0.0:4242/api``` for examples
