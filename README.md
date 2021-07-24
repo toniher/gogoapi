@@ -14,7 +14,7 @@ Install dependendencies with: ```npm install``` and start the application with `
 
 This will start a service under ```0.0.0.0:4242/api``` (if defined as such in ```basepath``` and ```port``` configuration parameters).
 
-A ```Dockerfile``` and a [generated Docker image]() is available as well. Care must be taken to adapt Docker networks so it can find pointed databases in ```config.json``` file.
+A ```Dockerfile``` and a [generated Docker image](https://hub.docker.com/r/toniher/gogoapi) is available as well. Care must be taken to adapt Docker networks so it can find pointed databases in ```config.json``` file.
 
 ## Datasets
 
