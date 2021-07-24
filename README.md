@@ -24,6 +24,8 @@ docker run --name mygogoapi -v /path/to/config.json:/data/config/config.json ton
 
 ## Datasets
 
+* Download of datasets at: https://github.com/toniher/biomirror/tree/master/mysql
+
 * Database dumps for convenience
   * [202010](https://biocore.crg.eu/gogoapi/biosql-202010.sql.gz) (22G)
 
