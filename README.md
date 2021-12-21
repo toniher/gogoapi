@@ -18,12 +18,12 @@ This will start a service under ```0.0.0.0:4242/api``` (if defined as such in ``
 
 ### Docker
 
-A ```Dockerfile``` and an already [generated Docker image](https://hub.docker.com/r/toniher/gogoapi) is available as well. Care must be taken to adapt Docker networks so it can find pointed databases in ```config.json``` file.
+A ```Dockerfile``` and an already [generated Docker image](https://hub.docker.com/r/toniher/gogoapi) are available as well. Care must be taken to adapt Docker networks so it can find pointed databases in ```config.json``` file.
 
 Adapt your ```config.json``` file and execute as follows:
 
 ```
-docker run --name mygogoapi -v /path/to/config.json:/data/config/config.json toniher/gogoapi
+docker run --name mygogoapi -v /path/to/your/config.json:/data/config/config.json toniher/gogoapi
 ```
 
 ## Datasets
