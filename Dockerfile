@@ -23,7 +23,7 @@ RUN npm install
 
 # Volume for configuration
 RUN mkdir -p /data/config
-VOLUME /data/config/config.json
+# VOLUME /data/config/config.json
 
 #Default port, change if necessary
 EXPOSE 4242 
